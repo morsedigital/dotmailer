@@ -26,6 +26,8 @@ module Dotmailer
       )
 
       true
+    rescue RestClient::BadRequest
+      raise DuplicateDataField
     end
 
     private

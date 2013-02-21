@@ -74,8 +74,20 @@ describe Dotmailer::Client do
         )
       end
 
-      it 'should return true' do
-        subject.create_data_field(name).should == true
+      context 'when the field doesnt exist' do
+        it 'should return true' do
+          subject.create_data_field(name).should == true
+        end
+      end
+
+      context 'when the field already exists' do
+        before(:each) do
+          stub_request(:post, data_fields_endpoint).to_return(:status => 400)
+        end
+
+        it 'should raise an error' do
+          expect { subject.create_data_field(name) }.to raise_error(Dotmailer::DuplicateDataField)
+        end
       end
     end
   end
