@@ -9,7 +9,6 @@ Gem::Specification.new do |s|
   s.email       = ["tech@econsultancy.com"]
   s.homepage    = "https://github.com/econsultancy/dotmailer"
   s.summary     = %q{A Ruby wrapper around the dotMailer REST API: https://apiconnector.com/v2/help/wadl}
-  s.summary     = %q{A Ruby wrapper around the dotMailer REST API: https://apiconnector.com/v2/help/wadl}
 
   s.rubyforge_project = "dotmailer"
 
