@@ -13,11 +13,30 @@ module Dotmailer
       get 'data-fields'
     end
 
+    def create_data_field(name, options = {})
+      options[:type]       ||= 'String'
+      options[:visibility] ||= 'Public'
+
+      post(
+        'data-fields',
+        'name'         => name,
+        'type'         => options[:type],
+        'visibility'   => options[:visibility],
+        'defaultValue' => options[:default]
+      )
+
+      true
+    end
+
     private
     attr_accessor :api_user, :api_pass
 
     def get(path)
       JSON.parse RestClient.get url(path), :accept => :json
+    end
+
+    def post(path, params)
+      JSON.parse RestClient.post url(path), params.to_json, :content_type => :json, :accept => :json
     end
 
     def url(path)
