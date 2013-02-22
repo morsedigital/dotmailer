@@ -21,20 +21,23 @@ To install as part of a project managed by bundler, add to your Gemfile:
 Usage
 -----
 
-Use the `Dotmailer::Client` class to access the dotMailer REST API.
+To use the dotMailer API, you will need to add your API username and password to your shell environment:
 
-You must initialize the Client with an API user and password (see [here](http://www.dotmailer.co.uk/api/more_about_api/getting_started_with_the_api.aspx) for instructions on obtaining these):
+    export DOTMAILER_USER=your-api-username
+    export DOTMAILER_PASS=your-api-password
 
-    client = Dotmailer::Client.new('your-api-username', 'your-api-password')
+(You can put these in your `~/.bashrc` or `~/.profile` to load them on login).
+
+For instructions on how to obtain your API username and password, see [here](http://www.dotmailer.co.uk/api/more_about_api/getting_started_with_the_api.aspx).
 
 Data Fields
 -----------
 
 ### List
 
-`Dotmailer::Client#get_data_fields` will return an Array of `Dotmailer::DataField` objects representing the data fields for the global address book:
+`Dotmailer.data_fields` will return an Array of `Dotmailer::DataField` objects representing the data fields for the global address book:
 
-    client.get_data_fields
+    Dotmailer.data_fields
     => [
          Dotmailer::DataField name: "FIELD1", type: "String", visibility: "Public", default: "",
          Dotmailer::DataField name: "FIELD2", type: "Numeric", visibility: "Private", default: 0
@@ -42,10 +45,10 @@ Data Fields
 
 ### Create
 
-`Dotmailer::Client#create_data_field` will attempt to create a new data field. On success it returns true, on failure it raises an exception:
+`Dotmailer.create_data_field` will attempt to create a new data field. On success it returns true, on failure it raises an exception:
 
-    client.create_data_field 'FIELD3', :type => 'String'
+    Dotmailer.create_data_field 'FIELD3', :type => 'String'
     => true
 
-    client.create_data_field 'FIELD3', :type => 'String'
+    Dotmailer.create_data_field 'FIELD3', :type => 'String'
     => Dotmailer::DuplicateDataField
