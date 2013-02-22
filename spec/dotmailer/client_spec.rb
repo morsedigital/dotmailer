@@ -3,29 +3,30 @@ require 'spec_helper'
 describe Dotmailer::Client do
   let(:api_user) { 'john_doe' }
   let(:api_pass) { 's3cr3t' }
+  let(:api_base_url) { "https://#{api_user}:#{api_pass}@api.dotmailer.com" }
 
   subject { Dotmailer::Client.new(api_user, api_pass) }
 
   context 'data fields' do
     let(:data_fields_endpoint) do
-      "https://#{api_user}:#{api_pass}@api.dotmailer.com/v2/data-fields"
+      "#{api_base_url}/v2/data-fields"
     end
 
     describe '#get_data_fields' do
       let(:data_fields) do
         [
-          {
+          Dotmailer::DataField.new(
             'name'         => 'FIRSTNAME',
             'type'         => 'String',
             'visibility'   => 'Public',
             'defaultValue' => 'John'
-          },
-          {
+          ),
+          Dotmailer::DataField.new(
             'name'         => 'CODE',
             'type'         => 'String',
             'visibility'   => 'Private',
             'defaultValue' => nil
-          }
+          )
         ]
       end
 

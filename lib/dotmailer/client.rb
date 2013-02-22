@@ -10,7 +10,9 @@ module Dotmailer
     end
 
     def get_data_fields
-      get 'data-fields'
+      fields = get 'data-fields'
+
+      fields.map { |attributes| DataField.new(attributes) }
     end
 
     def create_data_field(name, options = {})
