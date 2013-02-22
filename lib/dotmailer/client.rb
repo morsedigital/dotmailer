@@ -19,7 +19,7 @@ module Dotmailer
       options[:type]       ||= 'String'
       options[:visibility] ||= 'Public'
 
-      post(
+      post_json(
         'data-fields',
         'name'         => name,
         'type'         => options[:type],
@@ -32,6 +32,18 @@ module Dotmailer
       raise DuplicateDataField
     end
 
+    def import_contacts(contacts_csv)
+      response = post 'contacts/import', contacts_csv, :content_type => :csv
+
+      response['id']
+    end
+
+    def import_status(import_id)
+      response = get "contacts/import/#{import_id}"
+
+      response['status']
+    end
+
     private
     attr_accessor :api_user, :api_pass
 
@@ -39,8 +51,12 @@ module Dotmailer
       JSON.parse RestClient.get url(path), :accept => :json
     end
 
-    def post(path, params)
-      JSON.parse RestClient.post url(path), params.to_json, :content_type => :json, :accept => :json
+    def post_json(path, params)
+      post path, params.to_json, :content_type => :json
+    end
+
+    def post(path, data, options = {})
+      JSON.parse RestClient.post url(path), data, options.merge(:accept => :json)
     end
 
     def url(path)

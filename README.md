@@ -52,3 +52,29 @@ Data Fields
 
     Dotmailer.create_data_field 'FIELD3', :type => 'String'
     => Dotmailer::DuplicateDataField
+
+Contacts
+--------
+
+### Bulk Import
+
+`Dotmailer.import_contacts` will start a batch import of contacts into the global address book, and return a `Dotmailer::ContactImport` object which has a `status`:
+
+    import = Dotmailer.import_contacts [
+      { 'Email' => 'joe@example.com' },
+      { 'Email' => 'sue@example.com' },
+      { 'Email' => 'bob@example.com' }
+    ]
+    => Dotmailer::ContactImport contacts: [{"Email"=>"joe@example.com" }, {"Email"=>"sue@example.com" }, {"Email"=>"bob@example.com"}]
+
+    import.finished?
+    => false
+    import.status
+    => "NotFinished"
+
+Then, once the import has finished:
+
+    import.finished?
+    => true
+    import.status
+    => "Finished"

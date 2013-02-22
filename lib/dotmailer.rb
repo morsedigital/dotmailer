@@ -1,5 +1,6 @@
 require 'dotmailer/exceptions'
 require 'dotmailer/data_field'
+require 'dotmailer/contact_import'
 require 'dotmailer/client'
 
 module Dotmailer
@@ -9,6 +10,14 @@ module Dotmailer
 
   def self.create_data_field(name, options = {})
     client.create_data_field(name, options)
+  end
+
+  def self.import_contacts(contacts)
+    contact_import = ContactImport.new(client, contacts)
+
+    contact_import.start
+
+    contact_import
   end
 
   def self.client
