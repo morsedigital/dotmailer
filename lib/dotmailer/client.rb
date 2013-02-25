@@ -2,7 +2,7 @@ require 'cgi'
 require 'json'
 require 'restclient'
 
-module Dotmailer
+module DotMailer
   class Client
     def initialize(api_user, api_pass)
       self.api_user = api_user

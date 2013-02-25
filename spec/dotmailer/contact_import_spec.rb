@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Dotmailer::ContactImport do
+describe DotMailer::ContactImport do
   let(:client) { double 'client' }
 
   let(:contacts) do
@@ -10,7 +10,7 @@ describe Dotmailer::ContactImport do
   end
 
   describe 'Class' do
-    subject { Dotmailer::ContactImport }
+    subject { DotMailer::ContactImport }
 
     describe '.import' do
       let(:contact_import) { double 'contact import', :start => double }
@@ -37,7 +37,7 @@ describe Dotmailer::ContactImport do
     end
   end
 
-  subject { Dotmailer::ContactImport.new(contacts) }
+  subject { DotMailer::ContactImport.new(contacts) }
 
   before(:each) do
     subject.stub :client => client

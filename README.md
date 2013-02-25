@@ -35,37 +35,37 @@ Data Fields
 
 ### List
 
-`Dotmailer.data_fields` will return an Array of `Dotmailer::DataField` objects representing the data fields for the global address book:
+`DotMailer.data_fields` will return an Array of `DotMailer::DataField` objects representing the data fields for the global address book:
 
-    Dotmailer.data_fields
+    DotMailer.data_fields
     => [
-         Dotmailer::DataField name: "FIELD1", type: "String", visibility: "Public", default: "",
-         Dotmailer::DataField name: "FIELD2", type: "Numeric", visibility: "Private", default: 0
+         DotMailer::DataField name: "FIELD1", type: "String", visibility: "Public", default: "",
+         DotMailer::DataField name: "FIELD2", type: "Numeric", visibility: "Private", default: 0
        ]
 
 ### Create
 
-`Dotmailer.create_data_field` will attempt to create a new data field. On success it returns true, on failure it raises an exception:
+`DotMailer.create_data_field` will attempt to create a new data field. On success it returns true, on failure it raises an exception:
 
-    Dotmailer.create_data_field 'FIELD3', :type => 'String'
+    DotMailer.create_data_field 'FIELD3', :type => 'String'
     => true
 
-    Dotmailer.create_data_field 'FIELD3', :type => 'String'
-    => Dotmailer::DuplicateDataField
+    DotMailer.create_data_field 'FIELD3', :type => 'String'
+    => DotMailer::DuplicateDataField
 
 Contacts
 --------
 
 ### Bulk Import
 
-`Dotmailer.import_contacts` will start a batch import of contacts into the global address book, and return a `Dotmailer::ContactImport` object which has a `status`:
+`DotMailer.import_contacts` will start a batch import of contacts into the global address book, and return a `DotMailer::ContactImport` object which has a `status`:
 
-    import = Dotmailer.import_contacts [
+    import = DotMailer.import_contacts [
       { 'Email' => 'joe@example.com' },
       { 'Email' => 'sue@example.com' },
       { 'Email' => 'bob@example.com' }
     ]
-    => Dotmailer::ContactImport contacts: [{"Email"=>"joe@example.com" }, {"Email"=>"sue@example.com" }, {"Email"=>"bob@example.com"}]
+    => DotMailer::ContactImport contacts: [{"Email"=>"joe@example.com" }, {"Email"=>"sue@example.com" }, {"Email"=>"bob@example.com"}]
 
     import.finished?
     => false

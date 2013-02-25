@@ -1,7 +1,7 @@
-module Dotmailer
+module DotMailer
   class DataField
     def self.client
-      Dotmailer.client
+      DotMailer.client
     end
 
     def self.all

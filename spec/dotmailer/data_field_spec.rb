@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe Dotmailer::DataField do
+describe DotMailer::DataField do
   describe 'Class' do
     let(:client) { double 'client' }
 
-    subject { Dotmailer::DataField }
+    subject { DotMailer::DataField }
 
     before(:each) do
       subject.stub :client => client
@@ -85,18 +85,18 @@ describe Dotmailer::DataField do
     }
   end
 
-  subject { Dotmailer::DataField.new(attributes) }
+  subject { DotMailer::DataField.new(attributes) }
 
   its(:name)       { should == name }
   its(:type)       { should == type }
   its(:visibility) { should == visibility }
   its(:default)    { should == default }
 
-  its(:to_s) { should == 'Dotmailer::DataField name: "FIRSTNAME", type: "String", visibility: "Public", default: "John"' }
+  its(:to_s) { should == 'DotMailer::DataField name: "FIRSTNAME", type: "String", visibility: "Public", default: "John"' }
 
   its(:to_json) { should == attributes.to_json }
 
   describe '#==' do
-    specify { subject.should == Dotmailer::DataField.new(attributes) }
+    specify { subject.should == DotMailer::DataField.new(attributes) }
   end
 end

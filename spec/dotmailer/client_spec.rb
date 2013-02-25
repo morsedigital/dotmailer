@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe Dotmailer::Client do
+describe DotMailer::Client do
   let(:api_user)      { 'john_doe' }
   let(:api_pass)      { 's3cr3t' }
   let(:api_base_url)  { "https://#{api_user}:#{api_pass}@api.dotmailer.com" }
   let(:api_path)      { '/some/api/path' }
   let(:api_endpoint)  { "#{api_base_url}/v2#{api_path}" }
 
-  subject { Dotmailer::Client.new(api_user, api_pass) }
+  subject { DotMailer::Client.new(api_user, api_pass) }
 
   describe '#get' do
     let(:response) { { 'foo' => 'bar' } }
@@ -59,7 +59,7 @@ describe Dotmailer::Client do
       end
 
       it 'should raise an InvalidRequest error with the error message' do
-        expect { subject.post(api_path, data) }.to raise_error(Dotmailer::InvalidRequest, error_message)
+        expect { subject.post(api_path, data) }.to raise_error(DotMailer::InvalidRequest, error_message)
       end
     end
   end

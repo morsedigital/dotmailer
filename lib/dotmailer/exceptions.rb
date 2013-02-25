@@ -1,4 +1,4 @@
-module Dotmailer
+module DotMailer
   class InvalidRequest < Exception
   end
 

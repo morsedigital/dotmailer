@@ -1,9 +1,9 @@
 require 'csv'
 
-module Dotmailer
+module DotMailer
   class ContactImport
     def self.client
-      Dotmailer.client
+      DotMailer.client
     end
 
     def self.import(contacts)

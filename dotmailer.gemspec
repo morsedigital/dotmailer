@@ -4,7 +4,7 @@ require "dotmailer/version"
 
 Gem::Specification.new do |s|
   s.name        = "dotmailer"
-  s.version     = Dotmailer::VERSION
+  s.version     = DotMailer::VERSION
   s.authors     = ["Econsultancy"]
   s.email       = ["tech@econsultancy.com"]
   s.homepage    = "https://github.com/econsultancy/dotmailer"

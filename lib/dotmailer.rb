@@ -3,7 +3,7 @@ require 'dotmailer/data_field'
 require 'dotmailer/contact_import'
 require 'dotmailer/client'
 
-module Dotmailer
+module DotMailer
   def self.data_fields
     DataField.all
   end
