@@ -1,0 +1,93 @@
+require 'spec_helper'
+
+describe DotMailer::Contact do
+  describe 'Class' do
+    let(:client) { double 'client' }
+
+    subject { DotMailer::Contact }
+
+    before(:each) do
+      subject.stub :client => client
+    end
+
+    describe '.find_by_email' do
+      let(:email)     { 'john.doe@example.com' }
+      let(:response)  { double 'response' }
+      let(:contact)   { double 'contact' }
+
+      before(:each) do
+        client.stub :get => response
+        subject.stub :new => contact
+      end
+
+      it 'should get the contact from the client' do
+        client.should_receive(:get).with("/contacts/#{email}")
+
+        subject.find_by_email email
+      end
+
+      it 'should initialize a new Contact with the response from the client' do
+        subject.should_receive(:new).with(response)
+
+        subject.find_by_email email
+      end
+
+      it 'should return the new Contact object' do
+        subject.find_by_email(email).should == contact
+      end
+
+      context 'when the contact doesnt exist' do
+        before(:each) do
+          client.stub(:get).and_raise(DotMailer::NotFound)
+        end
+
+        it 'should return nil' do
+          subject.find_by_email(email).should be_nil
+        end
+      end
+    end
+
+    describe '.find_by_id' do
+      let(:id)      { 123 }
+      let(:contact) { double 'contact' }
+
+      before(:each) do
+        subject.stub :find_by_email => contact
+      end
+
+      it 'should call find_by_email with the id' do
+        subject.should_receive(:find_by_email).with(id)
+
+        subject.find_by_id id
+      end
+
+      it 'should return the contact from find_by_email' do
+        subject.find_by_id(id).should == contact
+      end
+    end
+  end
+
+  let(:id)          { double 'id' }
+  let(:email)       { double 'email' }
+  let(:opt_in_type) { double 'opt in type' }
+  let(:email_type)  { double 'email type' }
+  let(:status)      { double 'status' }
+
+  let(:attributes) do
+    {
+      'id'        => id,
+      'email'     => email,
+      'optInType' => opt_in_type,
+      'emailType' => email_type,
+      'status'    => status
+    }
+  end
+
+  subject { DotMailer::Contact.new(attributes) }
+
+  its(:id)          { should == id }
+  its(:email)       { should == email }
+  its(:opt_in_type) { should == opt_in_type }
+  its(:email_type)  { should == email_type }
+  its(:status)      { should == status }
+end

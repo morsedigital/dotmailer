@@ -56,6 +56,26 @@ Data Fields
 Contacts
 --------
 
+### Finding A Contact
+
+There are two ways to find contacts via the API, using a contact's email address or id.
+
+The gem provides two methods for doing so: `DotMailer.find_contact_by_email` and `DotMailer.find_contact_by_id`.
+
+Suppose you have one contact with email john@example.com and id 12345, then:
+
+    DotMailer.find_contact_by_email 'john@example.com'
+    => DotMailer::Contact id: 12345, email: john@example.com
+
+    DotMailer.find_contact_by_email 'sue@example.com'
+    => nil
+
+    DotMailer.find_contact_by_id 12345
+    => DotMailer::Contact id: 12345, email: john@example.com
+
+    DotMailer.find_contact_by_id 54321
+    => nil
+
 ### Bulk Import
 
 `DotMailer.import_contacts` will start a batch import of contacts into the global address book, and return a `DotMailer::ContactImport` object which has a `status`:
