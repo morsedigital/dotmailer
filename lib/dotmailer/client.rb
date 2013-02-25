@@ -9,18 +9,6 @@ module Dotmailer
       self.api_pass = api_pass
     end
 
-    def import_contacts(contacts_csv)
-      response = post '/contacts/import', contacts_csv, :content_type => :csv
-
-      response['id']
-    end
-
-    def import_status(import_id)
-      response = get "/contacts/import/#{import_id}"
-
-      response['status']
-    end
-
     def get(path)
       endpoint = endpoint_for(path)
       response = RestClient.get endpoint, :accept => :json

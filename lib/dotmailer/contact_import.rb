@@ -2,22 +2,37 @@ require 'csv'
 
 module Dotmailer
   class ContactImport
+    def self.client
+      Dotmailer.client
+    end
+
+    def self.import(contacts)
+      contact_import = new(contacts)
+
+      contact_import.start
+
+      contact_import
+    end
+
     attr_reader :id
 
-    def initialize(client, contacts)
-      self.client   = client
+    def initialize(contacts)
       self.contacts = contacts
     end
 
     def start
-      self.id = client.import_contacts contacts_csv
+      response = client.post '/contacts/import', contacts_csv
+
+      self.id = response['id']
     end
 
     def status
       if id.nil?
         'NotStarted'
       else
-        client.import_status id
+        response = client.get "/contacts/import/#{id}"
+
+        response['status']
       end
     end
 
@@ -34,8 +49,12 @@ module Dotmailer
     end
 
     private
-    attr_accessor :client, :contacts
+    attr_accessor :contacts
     attr_writer :id
+
+    def client
+      self.class.client
+    end
 
     def contact_headers
       @contact_headers ||= contacts.map(&:keys).flatten.uniq

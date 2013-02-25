@@ -13,11 +13,7 @@ module Dotmailer
   end
 
   def self.import_contacts(contacts)
-    contact_import = ContactImport.new(client, contacts)
-
-    contact_import.start
-
-    contact_import
+    ContactImport.import contacts
   end
 
   def self.client

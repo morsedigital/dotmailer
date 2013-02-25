@@ -9,25 +9,58 @@ describe Dotmailer::ContactImport do
     ]
   end
 
-  subject { Dotmailer::ContactImport.new(client, contacts) }
+  describe 'Class' do
+    subject { Dotmailer::ContactImport }
+
+    describe '.import' do
+      let(:contact_import) { double 'contact import', :start => double }
+
+      before(:each) do
+        subject.stub :new => contact_import
+      end
+
+      it 'should create a new instance with the contacts' do
+        subject.should_receive(:new).with(contacts)
+
+        subject.import contacts
+      end
+
+      it 'should start the new contact import' do
+        contact_import.should_receive :start
+
+        subject.import contacts
+      end
+
+      it 'should return the contact import' do
+        subject.import(contacts).should == contact_import
+      end
+    end
+  end
+
+  subject { Dotmailer::ContactImport.new(contacts) }
+
+  before(:each) do
+    subject.stub :client => client
+  end
 
   its(:id) { should be_nil }
 
   describe '#start' do
     let(:contacts_csv) { "Email\njohn.doe@example.com\n" }
     let(:id)           { double 'id' }
+    let(:response)     { { 'id' => id, 'status' => 'NotFinished' } }
 
     before(:each) do
-      client.stub :import_contacts => id
+      client.stub :post => response
     end
 
-    it 'should call #import_contacts on the client' do
-      client.should_receive(:import_contacts).with(contacts_csv)
+    it 'should call post on the client with the contacts in CSV format' do
+      client.should_receive(:post).with('/contacts/import', contacts_csv)
 
       subject.start
     end
 
-    it 'should set the id' do
+    it 'should set the id from the response' do
       subject.start
       subject.id.should == id
     end
@@ -45,15 +78,16 @@ describe Dotmailer::ContactImport do
     end
 
     context 'when the import has started' do
-      let(:id)     { double 'id' }
-      let(:status) { double 'status' }
+      let(:id)       { '12345' }
+      let(:status)   { double 'status' }
+      let(:response) { { 'id' => id, 'status' => status } }
 
       before(:each) do
-        client.stub :import_status => status
+        client.stub :get => response
       end
 
-      it 'should call #import_status on the client' do
-        client.should_receive(:import_status).with(id)
+      it 'should get the status from the client' do
+        client.should_receive(:get).with("/contacts/import/#{id}")
 
         subject.status
       end
