@@ -5,11 +5,11 @@ require 'dotmailer/client'
 
 module Dotmailer
   def self.data_fields
-    client.get_data_fields
+    DataField.all
   end
 
   def self.create_data_field(name, options = {})
-    client.create_data_field(name, options)
+    DataField.create name, options
   end
 
   def self.import_contacts(contacts)

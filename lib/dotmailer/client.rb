@@ -9,27 +9,6 @@ module Dotmailer
       self.api_pass = api_pass
     end
 
-    def get_data_fields
-      fields = get '/data-fields'
-
-      fields.map { |attributes| DataField.new(attributes) }
-    end
-
-    def create_data_field(name, options = {})
-      options[:type]       ||= 'String'
-      options[:visibility] ||= 'Public'
-
-      post_json(
-        '/data-fields',
-        'name'         => name,
-        'type'         => options[:type],
-        'visibility'   => options[:visibility],
-        'defaultValue' => options[:default]
-      )
-
-      true
-    end
-
     def import_contacts(contacts_csv)
       response = post '/contacts/import', contacts_csv, :content_type => :csv
 
@@ -41,9 +20,6 @@ module Dotmailer
 
       response['status']
     end
-
-    private
-    attr_accessor :api_user, :api_pass
 
     def get(path)
       endpoint = endpoint_for(path)
@@ -66,6 +42,9 @@ module Dotmailer
     rescue RestClient::BadRequest => e
       raise InvalidRequest, JSON.parse(e.http_body)['message']
     end
+
+    private
+    attr_accessor :api_user, :api_pass
 
     def endpoint_for(path)
       URI::Generic.build(

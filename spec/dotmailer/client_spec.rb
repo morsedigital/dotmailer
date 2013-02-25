@@ -1,95 +1,88 @@
 require 'spec_helper'
 
 describe Dotmailer::Client do
-  let(:api_user) { 'john_doe' }
-  let(:api_pass) { 's3cr3t' }
-  let(:api_base_url) { "https://#{api_user}:#{api_pass}@api.dotmailer.com" }
+  let(:api_user)      { 'john_doe' }
+  let(:api_pass)      { 's3cr3t' }
+  let(:api_base_url)  { "https://#{api_user}:#{api_pass}@api.dotmailer.com" }
+  let(:api_path)      { '/some/api/path' }
+  let(:api_endpoint)  { "#{api_base_url}/v2#{api_path}" }
 
   subject { Dotmailer::Client.new(api_user, api_pass) }
 
-  context 'data fields' do
-    let(:data_fields_endpoint) do
-      "#{api_base_url}/v2/data-fields"
+  describe '#get' do
+    let(:response) { { 'foo' => 'bar' } }
+
+    before(:each) do
+      stub_request(:get, api_endpoint).to_return(:body => response.to_json)
     end
 
-    describe '#get_data_fields' do
-      let(:data_fields) do
-        [
-          Dotmailer::DataField.new(
-            'name'         => 'FIRSTNAME',
-            'type'         => 'String',
-            'visibility'   => 'Public',
-            'defaultValue' => 'John'
-          ),
-          Dotmailer::DataField.new(
-            'name'         => 'CODE',
-            'type'         => 'String',
-            'visibility'   => 'Private',
-            'defaultValue' => nil
-          )
-        ]
-      end
+    it 'should GET the endpoint with a JSON accept header' do
+      subject.get api_path
 
-      before(:each) do
-        stub_request(:get, data_fields_endpoint).to_return(:body => data_fields.to_json)
-      end
-
-      it 'should get the fields from the data fields endpoint' do
-        subject.get_data_fields
-
-        WebMock.should have_requested(:get, data_fields_endpoint).with(
-          :headers => { 'Accept' => 'application/json' }
-        )
-      end
-
-      it 'should return the data fields from the data fields endpoint' do
-        subject.get_data_fields.should == data_fields
-      end
+      WebMock.should have_requested(:get, api_endpoint).with(
+        :headers => { 'Accept' => 'application/json' }
+      )
     end
 
-    describe '#create_data_field' do
-      let(:name) { 'FIRSTNAME' }
+    it 'should return the response from the endpoint' do
+      subject.get(api_path).should == response
+    end
+  end
 
-      let(:data_field_json) do
-        {
-          'name'         => name,
-          'type'         => 'String',
-          'visibility'   => 'Public',
-          'defaultValue' => nil
-        }.to_json
-      end
+  describe '#post' do
+    let(:data)     { 'some random data' }
+    let(:response) { { 'foo' => 'bar' } }
+
+    before(:each) do
+      stub_request(:post, api_endpoint).to_return(:body => response.to_json)
+    end
+
+    it 'should POST the data to the endpoint with a JSON accept header' do
+      subject.post api_path, data
+
+      WebMock.should have_requested(:post, api_endpoint).with(
+        :headers => { 'Accept' => 'application/json' },
+        :body    => data
+      )
+    end
+
+    it 'should return the response from the endpoint' do
+      subject.post(api_path, data).should == response
+    end
+
+    context 'when the data is invalid for the endpoint' do
+      let(:error_message) { 'invalid data' }
+      let(:response)      { { 'message' => error_message } }
 
       before(:each) do
-        stub_request(:post, data_fields_endpoint).to_return(:body => data_field_json)
+        stub_request(:post, api_endpoint).to_return(:status => 400, :body => response.to_json)
       end
 
-      it 'should post the field to the data fields endpoint' do
-        subject.create_data_field name
-
-        WebMock.should have_requested(:post, data_fields_endpoint).with(
-          :body    => data_field_json,
-          :headers => {
-            'Accept'       => 'application/json',
-            'Content-Type' => 'application/json'
-          }
-        )
+      it 'should raise an InvalidRequest error with the error message' do
+        expect { subject.post(api_path, data) }.to raise_error(Dotmailer::InvalidRequest, error_message)
       end
+    end
+  end
 
-      context 'when the field doesnt exist' do
-        it 'should return true' do
-          subject.create_data_field(name).should == true
-        end
-      end
+  describe '#post_json' do
+    let(:params) { { 'foo' => 'bar' } }
 
-      context 'when the field already exists' do
-        before(:each) do
-          stub_request(:post, data_fields_endpoint).to_return(:status => 400, :body => '{"message": "duplicate field"}')
-        end
+    it 'should call post with the path' do
+      subject.should_receive(:post).with(api_path, anything, anything)
 
-        it 'should raise an error' do
-          expect { subject.create_data_field(name) }.to raise_error(Dotmailer::InvalidRequest)
-        end
-      end
+      subject.post_json api_path, params
+    end
+
+    it 'should convert the params to JSON' do
+      subject.should_receive(:post).with(anything, params.to_json, anything)
+
+      subject.post_json api_path, params
+    end
+
+    it 'should pass use the correct content type' do
+      subject.should_receive(:post).with(anything, anything, hash_including(:content_type => :json))
+
+      subject.post_json api_path, params
     end
   end
 
