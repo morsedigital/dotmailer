@@ -37,7 +37,7 @@ module Dotmailer
     def endpoint_for(path)
       URI::Generic.build(
         :scheme   => 'https',
-        :userinfo => "#{CGI.escape(api_user)}:#{api_pass}",
+        :userinfo => "#{CGI.escape(api_user)}:#{CGI.escape(api_pass)}",
         :host     => 'api.dotmailer.com',
         :path     => "/v2#{path}"
       ).to_s
