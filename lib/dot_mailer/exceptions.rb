@@ -5,6 +5,9 @@ module DotMailer
   class NotFound < Exception
   end
 
+  class UnknownDataField < Exception
+  end
+
   class MissingCredentials < Exception
   end
 end

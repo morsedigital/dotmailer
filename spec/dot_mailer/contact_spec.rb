@@ -90,4 +90,28 @@ describe DotMailer::Contact do
   its(:opt_in_type) { should == opt_in_type }
   its(:email_type)  { should == email_type }
   its(:status)      { should == status }
+
+  describe '#[]' do
+    let(:data_fields) { {} }
+
+    before(:each) do
+      subject.stub :data_fields => data_fields
+    end
+
+    context 'when the data field doesnt exist' do
+      let(:key) { 'UNKNOWN' }
+
+      it 'should raise an UnknownDataField error' do
+        expect { subject[key] }.to raise_error(DotMailer::UnknownDataField)
+      end
+    end
+
+    context 'when the data field does exist' do
+      let(:key)         { double 'key' }
+      let(:value)       { double 'value' }
+      let(:data_fields) { { key => value } }
+
+      specify { subject[key].should == value }
+    end
+  end
 end
