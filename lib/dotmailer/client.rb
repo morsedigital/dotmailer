@@ -10,7 +10,7 @@ module Dotmailer
     end
 
     def get_data_fields
-      fields = get 'data-fields'
+      fields = get '/data-fields'
 
       fields.map { |attributes| DataField.new(attributes) }
     end
@@ -20,7 +20,7 @@ module Dotmailer
       options[:visibility] ||= 'Public'
 
       post_json(
-        'data-fields',
+        '/data-fields',
         'name'         => name,
         'type'         => options[:type],
         'visibility'   => options[:visibility],
@@ -33,13 +33,13 @@ module Dotmailer
     end
 
     def import_contacts(contacts_csv)
-      response = post 'contacts/import', contacts_csv, :content_type => :csv
+      response = post '/contacts/import', contacts_csv, :content_type => :csv
 
       response['id']
     end
 
     def import_status(import_id)
-      response = get "contacts/import/#{import_id}"
+      response = get "/contacts/import/#{import_id}"
 
       response['status']
     end
@@ -70,7 +70,7 @@ module Dotmailer
         :scheme   => 'https',
         :userinfo => "#{CGI.escape(api_user)}:#{api_pass}",
         :host     => 'api.dotmailer.com',
-        :path     => "/v2/#{path}"
+        :path     => "/v2#{path}"
       ).to_s
     end
   end
