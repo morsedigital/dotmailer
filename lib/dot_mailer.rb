@@ -1,7 +1,7 @@
-require 'dotmailer/exceptions'
-require 'dotmailer/data_field'
-require 'dotmailer/contact_import'
-require 'dotmailer/client'
+require 'dot_mailer/exceptions'
+require 'dot_mailer/data_field'
+require 'dot_mailer/contact_import'
+require 'dot_mailer/client'
 
 module DotMailer
   def self.data_fields

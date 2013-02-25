@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "dotmailer/version"
+require "dot_mailer/version"
 
 Gem::Specification.new do |s|
   s.name        = "dotmailer"
