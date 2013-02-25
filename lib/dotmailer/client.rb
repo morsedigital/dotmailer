@@ -48,7 +48,10 @@ module Dotmailer
     attr_accessor :api_user, :api_pass
 
     def get(path)
-      JSON.parse RestClient.get url(path), :accept => :json
+      endpoint = endpoint_for(path)
+      response = RestClient.get endpoint, :accept => :json
+
+      JSON.parse response
     end
 
     def post_json(path, params)
@@ -56,10 +59,13 @@ module Dotmailer
     end
 
     def post(path, data, options = {})
-      JSON.parse RestClient.post url(path), data, options.merge(:accept => :json)
+      endpoint = endpoint_for(path)
+      response = RestClient.post endpoint, data, options.merge(:accept => :json)
+
+      JSON.parse response
     end
 
-    def url(path)
+    def endpoint_for(path)
       URI::Generic.build(
         :scheme   => 'https',
         :userinfo => "#{CGI.escape(api_user)}:#{api_pass}",
