@@ -1,5 +1,5 @@
 module Dotmailer
-  class DuplicateDataField < Exception
+  class InvalidRequest < Exception
   end
 
   class MissingCredentials < Exception

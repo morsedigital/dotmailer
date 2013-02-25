@@ -28,8 +28,6 @@ module Dotmailer
       )
 
       true
-    rescue RestClient::BadRequest
-      raise DuplicateDataField
     end
 
     def import_contacts(contacts_csv)
@@ -52,6 +50,8 @@ module Dotmailer
       response = RestClient.get endpoint, :accept => :json
 
       JSON.parse response
+    rescue RestClient::BadRequest => e
+      raise InvalidRequest, JSON.parse(e.http_body)['message']
     end
 
     def post_json(path, params)
@@ -63,6 +63,8 @@ module Dotmailer
       response = RestClient.post endpoint, data, options.merge(:accept => :json)
 
       JSON.parse response
+    rescue RestClient::BadRequest => e
+      raise InvalidRequest, JSON.parse(e.http_body)['message']
     end
 
     def endpoint_for(path)
