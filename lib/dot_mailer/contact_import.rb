@@ -21,7 +21,7 @@ module DotMailer
     end
 
     def start
-      response = client.post '/contacts/import', contacts_csv
+      response = client.post_csv '/contacts/import', contacts_csv
 
       self.id = response['id']
     end

@@ -85,4 +85,34 @@ describe DotMailer::Client do
       subject.post_json api_path, params
     end
   end
+
+  describe '#post_csv' do
+    let(:csv)      { "Some\nCSV\nString" }
+    let(:tempfile) { double 'tempfile', :write => true, :rewind => true }
+
+    before(:each) do
+      Tempfile.stub :new => tempfile
+      subject.stub :post => double
+    end
+
+    it 'should call post with the path' do
+      subject.should_receive(:post).with(api_path, anything)
+
+      subject.post_csv api_path, csv
+    end
+
+    it 'should create a Tempfile with the contents and rewind it' do
+      Tempfile.should_receive(:new).and_return(tempfile)
+      tempfile.should_receive(:write).with(csv)
+      tempfile.should_receive(:rewind)
+
+      subject.post_csv api_path, csv
+    end
+
+    it 'should call post with the tempfile' do
+      subject.should_receive(:post).with(api_path, hash_including(:csv => tempfile))
+
+      subject.post_csv api_path, csv
+    end
+  end
 end

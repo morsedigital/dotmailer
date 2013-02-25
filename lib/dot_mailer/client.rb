@@ -1,3 +1,4 @@
+require 'tempfile'
 require 'cgi'
 require 'json'
 require 'restclient'
@@ -20,6 +21,16 @@ module DotMailer
 
     def post_json(path, params)
       post path, params.to_json, :content_type => :json
+    end
+
+    # Need to use a Tempfile as the API will not accept CSVs
+    # without filenames
+    def post_csv(path, csv)
+      file = Tempfile.new(['dotmailer-contacts', '.csv'])
+      file.write csv
+      file.rewind
+
+      post path, :csv => file
     end
 
     def post(path, data, options = {})

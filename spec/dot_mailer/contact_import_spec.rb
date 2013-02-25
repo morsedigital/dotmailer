@@ -51,11 +51,11 @@ describe DotMailer::ContactImport do
     let(:response)     { { 'id' => id, 'status' => 'NotFinished' } }
 
     before(:each) do
-      client.stub :post => response
+      client.stub :post_csv => response
     end
 
-    it 'should call post on the client with the contacts in CSV format' do
-      client.should_receive(:post).with('/contacts/import', contacts_csv)
+    it 'should call post_csv on the client with the contacts in CSV format' do
+      client.should_receive(:post_csv).with('/contacts/import', contacts_csv)
 
       subject.start
     end
