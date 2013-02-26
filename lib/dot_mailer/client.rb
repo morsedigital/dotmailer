@@ -42,6 +42,19 @@ module DotMailer
       end
     end
 
+    def put_json(path, params)
+      put path, params.to_json, :content_type => :json
+    end
+
+    def put(path, data, options = {})
+      rescue_api_errors do
+        endpoint = endpoint_for(path)
+        response = RestClient.put endpoint, data, options.merge(:accept => :json)
+
+        JSON.parse response
+      end
+    end
+
     private
     attr_accessor :api_user, :api_pass
 

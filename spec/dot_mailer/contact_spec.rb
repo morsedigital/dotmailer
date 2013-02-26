@@ -145,4 +145,42 @@ describe DotMailer::Contact do
       end
     end
   end
+
+  describe '#save' do
+    let(:id)          { '12345' }
+    let(:key)         { double 'key' }
+    let(:value)       { double 'value' }
+    let(:data_fields) { { key => value } }
+    let(:client)      { double 'client' }
+
+    before(:each) do
+      client.stub :put_json
+      subject.stub :client => client, :data_fields => data_fields
+    end
+
+    it 'should call put_json on the client with the id path' do
+      client.should_receive(:put_json).with("/contacts/#{id}", anything)
+
+      subject.save
+    end
+
+    it 'should call put_json on the client with the attributes in the correct format' do
+      client.should_receive(:put_json).with(anything, {
+        'id'         => id,
+        'email'      => email,
+        'optInType'  => opt_in_type,
+        'emailType'  => email_type,
+        'status'     => status,
+        'dataFields' => [
+          { 'key' => key, 'value' => value }
+        ]
+      })
+
+      subject.save
+    end
+
+    it 'should return true' do
+      subject.save.should == true
+    end
+  end
 end

@@ -85,8 +85,18 @@ module DotMailer
       end
     end
 
+    def save
+      client.put_json "/contacts/#{id}", attributes.merge('dataFields' => data_fields_for_api)
+
+      true
+    end
+
     private
     attr_accessor :attributes
+
+    def client
+      self.class.client
+    end
 
     # Convert data fields from the API into a flat hash.
     #
@@ -110,6 +120,23 @@ module DotMailer
             hash[data_field.name] = value
           end
         end
+    end
+
+    # Convert data fields from a flat hash to an API compatible hash:
+    #
+    #   { 'FIELD1' => 'some value', 'FIELD2' => 'some other value' }
+    #
+    # Becomes:
+    #
+    #   [
+    #     { 'key' => 'FIELD1', 'value' => 'some value'},
+    #     { 'key' => 'FIELD2', 'value' => 'some other value'}
+    #   ]
+    #
+    def data_fields_for_api
+      data_fields.map do |key, value|
+        { 'key' => key, 'value' => value }
+      end
     end
   end
 end
