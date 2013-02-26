@@ -1,20 +1,16 @@
 module DotMailer
   class DataField
-    def self.client
-      DotMailer.client
-    end
-
-    def self.all
-      fields = client.get '/data-fields'
+    def self.all(account)
+      fields = account.client.get '/data-fields'
 
       fields.map { |attributes| new(attributes) }
     end
 
-    def self.create(name, options = {})
+    def self.create(account, name, options = {})
       options[:type]       ||= 'String'
       options[:visibility] ||= 'Public'
 
-      client.post_json(
+      account.client.post_json(
         '/data-fields',
         'name'         => name,
         'type'         => options[:type],

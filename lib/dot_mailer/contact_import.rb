@@ -2,12 +2,8 @@ require 'csv'
 
 module DotMailer
   class ContactImport
-    def self.client
-      DotMailer.client
-    end
-
-    def self.import(contacts)
-      contact_import = new(contacts)
+    def self.import(account, contacts)
+      contact_import = new(account, contacts)
 
       contact_import.start
 
@@ -16,7 +12,8 @@ module DotMailer
 
     attr_reader :id
 
-    def initialize(contacts)
+    def initialize(account, contacts)
+      self.account  = account
       self.contacts = contacts
     end
 
@@ -49,11 +46,11 @@ module DotMailer
     end
 
     private
-    attr_accessor :contacts
+    attr_accessor :contacts, :account
     attr_writer :id
 
     def client
-      self.class.client
+      account.client
     end
 
     def contact_headers

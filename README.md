@@ -21,12 +21,11 @@ To install as part of a project managed by bundler, add to your Gemfile:
 Usage
 -----
 
-To use the dotMailer API, you will need to add your API username and password to your shell environment:
+Interaction with the dotMailer API is done via a `DotMailer::Account` object, which is initialized with an API username and password:
 
-    export DOTMAILER_USER=your-api-username
-    export DOTMAILER_PASS=your-api-password
+    account = DotMailer::Account.new('your-api-username', 'your-api-password')
 
-(You can put these in your `~/.bashrc` or `~/.profile` to load them on login).
+All interaction via this object will be for the dotMailer account associated with the API credentials.
 
 For instructions on how to obtain your API username and password, see [here](http://www.dotmailer.co.uk/api/more_about_api/getting_started_with_the_api.aspx).
 
@@ -35,9 +34,11 @@ Data Fields
 
 ### List
 
-`DotMailer.data_fields` will return an Array of `DotMailer::DataField` objects representing the data fields for the global address book:
+`DotMailer::Account#data_fields` will return an Array of `DotMailer::DataField` objects representing the data fields for the account's global address book:
 
-    DotMailer.data_fields
+    account = DotMailer::Account.new('your-api-username', 'your-api-password')
+
+    account.data_fields
     => [
          DotMailer::DataField name: "FIELD1", type: "String", visibility: "Public", default: "",
          DotMailer::DataField name: "FIELD2", type: "Numeric", visibility: "Private", default: 0
@@ -45,13 +46,15 @@ Data Fields
 
 ### Create
 
-`DotMailer.create_data_field` will attempt to create a new data field. On success it returns true, on failure it raises an exception:
+`DotMailer::Account#create_data_field` will attempt to create a new data field. On success it returns true, on failure it raises an exception:
 
-    DotMailer.create_data_field 'FIELD3', :type => 'String'
+    account = DotMailer::Account.new('your-api-username', 'your-api-password')
+
+    account.create_data_field 'FIELD3', :type => 'String'
     => true
 
-    DotMailer.create_data_field 'FIELD3', :type => 'String'
-    => DotMailer::DuplicateDataField
+    account.create_data_field 'FIELD3', :type => 'String'
+    => DotMailer::InvalidRequest: Field already exists. ERROR_NON_UNIQUE_DATAFIELD
 
 Contacts
 --------
@@ -60,27 +63,31 @@ Contacts
 
 There are two ways to find contacts via the API, using a contact's email address or id.
 
-The gem provides two methods for doing so: `DotMailer.find_contact_by_email` and `DotMailer.find_contact_by_id`.
+The gem provides two methods for doing so: `DotMailer::Account#find_contact_by_email` and `DotMailer::Account#find_contact_by_id`.
 
 Suppose you have one contact with email john@example.com and id 12345, then:
 
-    DotMailer.find_contact_by_email 'john@example.com'
+    account = DotMailer::Account.new('your-api-username', 'your-api-password')
+
+    account.find_contact_by_email 'john@example.com'
     => DotMailer::Contact id: 12345, email: john@example.com
 
-    DotMailer.find_contact_by_email 'sue@example.com'
+    account.find_contact_by_email 'sue@example.com'
     => nil
 
-    DotMailer.find_contact_by_id 12345
+    account.find_contact_by_id 12345
     => DotMailer::Contact id: 12345, email: john@example.com
 
-    DotMailer.find_contact_by_id 54321
+    account.find_contact_by_id 54321
     => nil
 
 ### Updating a contact
 
 Contacts can be updated by assigning new values and calling `DotMailer::Contact#save`:
 
-    contact = DotMailer.find_contact_by_email 'john@example.com'
+    account = DotMailer::Account.new('your-api-username', 'your-api-password')
+
+    contact = account.find_contact_by_email 'john@example.com'
     => DotMailer::Contact id: 12345, email: john@example.com, email_type: Html
 
     contact.email_type
@@ -118,9 +125,11 @@ Then, once the contact has gone through the resubscribe process and been redirec
 
 ### Bulk Import
 
-`DotMailer.import_contacts` will start a batch import of contacts into the global address book, and return a `DotMailer::ContactImport` object which has a `status`:
+`DotMailer::Account#import_contacts` will start a batch import of contacts into the global address book, and return a `DotMailer::ContactImport` object which has a `status`:
 
-    import = DotMailer.import_contacts [
+    account = DotMailer::Account.new('your-api-username', 'your-api-password')
+
+    import = account.import_contacts [
       { 'Email' => 'joe@example.com' },
       { 'Email' => 'sue@example.com' },
       { 'Email' => 'bob@example.com' }

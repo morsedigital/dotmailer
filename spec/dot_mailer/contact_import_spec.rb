@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 describe DotMailer::ContactImport do
-  let(:client) { double 'client' }
+  let(:client)  { double 'client' }
+  let(:account) { double 'account', :client => client }
 
   let(:contacts) do
     [
@@ -19,29 +20,25 @@ describe DotMailer::ContactImport do
         subject.stub :new => contact_import
       end
 
-      it 'should create a new instance with the contacts' do
-        subject.should_receive(:new).with(contacts)
+      it 'should create a new instance with the account and contacts' do
+        subject.should_receive(:new).with(account, contacts)
 
-        subject.import contacts
+        subject.import account, contacts
       end
 
       it 'should start the new contact import' do
         contact_import.should_receive :start
 
-        subject.import contacts
+        subject.import account, contacts
       end
 
       it 'should return the contact import' do
-        subject.import(contacts).should == contact_import
+        subject.import(account, contacts).should == contact_import
       end
     end
   end
 
-  subject { DotMailer::ContactImport.new(contacts) }
-
-  before(:each) do
-    subject.stub :client => client
-  end
+  subject { DotMailer::ContactImport.new(account, contacts) }
 
   its(:id) { should be_nil }
 

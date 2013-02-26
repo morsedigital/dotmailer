@@ -1,14 +1,11 @@
 require 'spec_helper'
 
 describe DotMailer::Contact do
+  let(:client)  { double 'client' }
+  let(:account) { double 'account', :client => client }
+
   describe 'Class' do
-    let(:client) { double 'client' }
-
     subject { DotMailer::Contact }
-
-    before(:each) do
-      subject.stub :client => client
-    end
 
     describe '.find_by_email' do
       let(:email)     { 'john.doe@example.com' }
@@ -23,17 +20,17 @@ describe DotMailer::Contact do
       it 'should get the contact from the client' do
         client.should_receive(:get).with("/contacts/#{email}")
 
-        subject.find_by_email email
+        subject.find_by_email account, email
       end
 
       it 'should initialize a new Contact with the response from the client' do
-        subject.should_receive(:new).with(response)
+        subject.should_receive(:new).with(account, response)
 
-        subject.find_by_email email
+        subject.find_by_email account, email
       end
 
       it 'should return the new Contact object' do
-        subject.find_by_email(email).should == contact
+        subject.find_by_email(account, email).should == contact
       end
 
       context 'when the contact doesnt exist' do
@@ -42,7 +39,7 @@ describe DotMailer::Contact do
         end
 
         it 'should return nil' do
-          subject.find_by_email(email).should be_nil
+          subject.find_by_email(account, email).should be_nil
         end
       end
     end
@@ -56,13 +53,13 @@ describe DotMailer::Contact do
       end
 
       it 'should call find_by_email with the id' do
-        subject.should_receive(:find_by_email).with(id)
+        subject.should_receive(:find_by_email).with(account, id)
 
-        subject.find_by_id id
+        subject.find_by_id account, id
       end
 
       it 'should return the contact from find_by_email' do
-        subject.find_by_id(id).should == contact
+        subject.find_by_id(account, id).should == contact
       end
     end
   end
@@ -83,7 +80,7 @@ describe DotMailer::Contact do
     }
   end
 
-  subject { DotMailer::Contact.new(attributes) }
+  subject { DotMailer::Contact.new(account, attributes) }
 
   its(:id)          { should == id }
   its(:email)       { should == email }
@@ -177,11 +174,10 @@ describe DotMailer::Contact do
     let(:key)         { double 'key' }
     let(:value)       { 'some value' }
     let(:data_fields) { { key => value } }
-    let(:client)      { double 'client' }
 
     before(:each) do
       client.stub :put_json
-      subject.stub :client => client, :data_fields => data_fields
+      subject.stub :data_fields => data_fields
     end
 
     it 'should call put_json on the client with the id path' do

@@ -2,13 +2,10 @@ require 'spec_helper'
 
 describe DotMailer::DataField do
   describe 'Class' do
-    let(:client) { double 'client' }
+    let(:client)  { double 'client' }
+    let(:account) { double 'account', :client => client }
 
     subject { DotMailer::DataField }
-
-    before(:each) do
-      subject.stub :client => client
-    end
 
     describe '.all' do
       let(:data_fields) {
@@ -35,11 +32,11 @@ describe DotMailer::DataField do
       it 'should get the fields from the client' do
         client.should_receive(:get).with('/data-fields')
 
-        subject.all
+        subject.all account
       end
 
       it 'should return a list of DataFields from the client' do
-        subject.all.should == data_fields.map { |df| subject.new(df) }
+        subject.all(account).should == data_fields.map { |df| subject.new(df) }
       end
     end
 
@@ -62,11 +59,11 @@ describe DotMailer::DataField do
       it 'should call post_json on the client with the field' do
         client.should_receive(:post_json).with('/data-fields', data_field)
 
-        subject.create name
+        subject.create account, name
       end
 
       it 'should return true' do
-        subject.create(name).should == true
+        subject.create(account, name).should == true
       end
     end
   end

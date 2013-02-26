@@ -55,6 +55,14 @@ module DotMailer
       end
     end
 
+    def to_s
+      "#{self.class.name} api_user: #{api_user}"
+    end
+
+    def inspect
+      to_s
+    end
+
     private
     attr_accessor :api_user, :api_pass
 

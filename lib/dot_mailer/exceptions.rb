@@ -10,7 +10,4 @@ module DotMailer
 
   class UnknownOptInType < Exception
   end
-
-  class MissingCredentials < Exception
-  end
 end

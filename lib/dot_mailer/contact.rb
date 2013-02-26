@@ -6,14 +6,10 @@ require 'dot_mailer/opt_in_type'
 
 module DotMailer
   class Contact
-    def self.client
-      DotMailer.client
-    end
+    def self.find_by_email(account, email)
+      response = account.client.get("/contacts/#{email}")
 
-    def self.find_by_email(email)
-      response = client.get("/contacts/#{email}")
-
-      new(response)
+      new(account, response)
     rescue DotMailer::NotFound
       nil
     end
@@ -21,11 +17,12 @@ module DotMailer
     # The API makes no distinction between finding
     # by email or id, so we just delegate to
     # Contact.find_by_email
-    def self.find_by_id(id)
-      find_by_email id
+    def self.find_by_id(account, id)
+      find_by_email account, id
     end
 
-    def initialize(attributes)
+    def initialize(account, attributes)
+      self.account    = account
       self.attributes = attributes
     end
 
@@ -119,10 +116,10 @@ module DotMailer
     end
 
     private
-    attr_accessor :attributes
+    attr_accessor :attributes, :account
 
     def client
-      self.class.client
+      account.client
     end
 
     # Convert data fields from the API into a flat hash.
@@ -143,7 +140,7 @@ module DotMailer
     def data_fields
       @data_fields ||=
         begin
-          DataField.all.each_with_object({}) do |data_field, hash|
+          account.data_fields.each_with_object({}) do |data_field, hash|
             value = attributes['dataFields'].detect { |f| f['key'] == data_field.name }.try(:[], 'value')
 
             if value.present? && data_field.date?
