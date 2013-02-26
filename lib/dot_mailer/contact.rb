@@ -45,6 +45,14 @@ module DotMailer
       attributes['status']
     end
 
+    def to_s
+      %{#{self.class.name} id: #{id}, email: #{email}, opt_in_type: #{opt_in_type}, email_type: #{email_type}, status: #{status}, data_fields: #{data_fields.to_s}}
+    end
+
+    def inspect
+      to_s
+    end
+
     # A wrapper method for accessing data field values by name, e.g.:
     #
     #   contact['FIRSTNAME']
