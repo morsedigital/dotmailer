@@ -1,4 +1,6 @@
 require 'active_support/core_ext/object/try'
+require 'active_support/core_ext/object/blank'
+require 'time'
 
 module DotMailer
   class Contact
@@ -100,6 +102,8 @@ module DotMailer
 
     # Convert data fields from the API into a flat hash.
     #
+    # We coerce Date fields from strings into Time objects.
+    #
     # The API returns data field values in the following format:
     #
     #   'dataFields' => [
@@ -116,6 +120,10 @@ module DotMailer
         begin
           DataField.all.each_with_object({}) do |data_field, hash|
             value = attributes['dataFields'].detect { |f| f['key'] == data_field.name }.try(:[], 'value')
+
+            if value.present? && data_field.date?
+              value = Time.parse(value)
+            end
 
             hash[data_field.name] = value
           end
@@ -135,7 +143,7 @@ module DotMailer
     #
     def data_fields_for_api
       data_fields.map do |key, value|
-        { 'key' => key, 'value' => value }
+        { 'key' => key, 'value' => value.to_s }
       end
     end
   end

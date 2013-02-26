@@ -149,7 +149,7 @@ describe DotMailer::Contact do
   describe '#save' do
     let(:id)          { '12345' }
     let(:key)         { double 'key' }
-    let(:value)       { double 'value' }
+    let(:value)       { 'some value' }
     let(:data_fields) { { key => value } }
     let(:client)      { double 'client' }
 

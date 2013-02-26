@@ -99,4 +99,18 @@ describe DotMailer::DataField do
   describe '#==' do
     specify { subject.should == DotMailer::DataField.new(attributes) }
   end
+
+  describe '#date?' do
+    context 'when type is "Date"' do
+      let(:type) { 'Date' }
+
+      specify { subject.should be_date }
+    end
+
+    context 'when type is not "Date"' do
+      let(:type) { 'String' }
+
+      specify { subject.should_not be_date }
+    end
+  end
 end
