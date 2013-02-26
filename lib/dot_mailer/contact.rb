@@ -33,12 +33,20 @@ module DotMailer
       attributes['email']
     end
 
+    def email=(email)
+      attributes['email'] = email
+    end
+
     def opt_in_type
       attributes['optInType']
     end
 
     def email_type
       attributes['emailType']
+    end
+
+    def email_type=(email_type)
+      attributes['emailType'] = email_type
     end
 
     def status
@@ -60,6 +68,18 @@ module DotMailer
     def [](key)
       if data_fields.has_key?(key)
         data_fields[key]
+      else
+        raise UnknownDataField, key
+      end
+    end
+
+    # A wrapper method for assigning data field values, e.g.:
+    #
+    #   contact['FIRSTNAME'] = 'Lewis'
+    #
+    def []=(key, value)
+      if data_fields.has_key?(key)
+        data_fields[key] = value
       else
         raise UnknownDataField, key
       end

@@ -91,6 +91,8 @@ describe DotMailer::Contact do
   its(:email_type)  { should == email_type }
   its(:status)      { should == status }
 
+  it_should_have_assignable_attributes :email, :email_type
+
   describe '#[]' do
     let(:data_fields) { {} }
 
@@ -112,6 +114,35 @@ describe DotMailer::Contact do
       let(:data_fields) { { key => value } }
 
       specify { subject[key].should == value }
+    end
+  end
+
+  describe '#[]=' do
+    let(:new_value) { double 'new value' }
+
+    let(:data_fields) { {} }
+
+    before(:each) do
+      subject.stub :data_fields => data_fields
+    end
+
+    context 'when the data field doesnt exist' do
+      let(:key) { 'UNKNOWN' }
+
+      it 'should raise an UnknownDataField error' do
+        expect { subject[key] = new_value }.to raise_error(DotMailer::UnknownDataField)
+      end
+    end
+
+    context 'when the data field does exist' do
+      let(:key)         { double 'key' }
+      let(:old_value)   { double 'old value' }
+      let(:data_fields) { { key => old_value } }
+
+      specify do
+        expect { subject[key] = new_value }.to \
+          change { subject[key] }.from(old_value).to(new_value)
+      end
     end
   end
 end
