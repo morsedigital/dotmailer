@@ -2,6 +2,8 @@ require 'active_support/core_ext/object/try'
 require 'active_support/core_ext/object/blank'
 require 'time'
 
+require 'dot_mailer/opt_in_type'
+
 module DotMailer
   class Contact
     def self.client
@@ -41,6 +43,12 @@ module DotMailer
 
     def opt_in_type
       attributes['optInType']
+    end
+
+    def opt_in_type=(opt_in_type)
+      raise UnknownOptInType, opt_in_type unless OptInType.exists?(opt_in_type)
+
+      attributes['optInType'] = opt_in_type
     end
 
     def email_type

@@ -93,6 +93,32 @@ describe DotMailer::Contact do
 
   it_should_have_assignable_attributes :email, :email_type
 
+  describe '#opt_in_type=' do
+    let(:value) { 'some opt in type' }
+
+    context 'when the opt in type exists' do
+      before(:each) do
+        DotMailer::OptInType.stub :exists? => true
+      end
+
+      it 'should change the opt in type' do
+        expect { subject.opt_in_type = value }.to \
+          change { subject.opt_in_type }.to(value)
+      end
+    end
+
+    context 'when the opt in type doesnt exist' do
+      before(:each) do
+        DotMailer::OptInType.stub :exists? => false
+      end
+
+      it 'should raise an UnknownOptInType error with the value' do
+        expect { subject.opt_in_type = value }.to \
+          raise_error(DotMailer::UnknownOptInType, value)
+      end
+    end
+  end
+
   describe '#[]' do
     let(:data_fields) { {} }
 

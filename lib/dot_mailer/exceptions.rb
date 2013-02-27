@@ -8,6 +8,9 @@ module DotMailer
   class UnknownDataField < Exception
   end
 
+  class UnknownOptInType < Exception
+  end
+
   class MissingCredentials < Exception
   end
 end
