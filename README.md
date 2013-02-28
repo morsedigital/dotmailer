@@ -56,6 +56,66 @@ Data Fields
 Contacts
 --------
 
+### Finding A Contact
+
+There are two ways to find contacts via the API, using a contact's email address or id.
+
+The gem provides two methods for doing so: `DotMailer.find_contact_by_email` and `DotMailer.find_contact_by_id`.
+
+Suppose you have one contact with email john@example.com and id 12345, then:
+
+    DotMailer.find_contact_by_email 'john@example.com'
+    => DotMailer::Contact id: 12345, email: john@example.com
+
+    DotMailer.find_contact_by_email 'sue@example.com'
+    => nil
+
+    DotMailer.find_contact_by_id 12345
+    => DotMailer::Contact id: 12345, email: john@example.com
+
+    DotMailer.find_contact_by_id 54321
+    => nil
+
+### Updating a contact
+
+Contacts can be updated by assigning new values and calling `DotMailer::Contact#save`:
+
+    contact = DotMailer.find_contact_by_email 'john@example.com'
+    => DotMailer::Contact id: 12345, email: john@example.com, email_type: Html
+
+    contact.email_type
+    => 'Html'
+    contact.email_type = 'PlainText'
+    => 'PlainText
+
+    contact.save
+    => true
+
+    contact = DotMailer.find_contact_by_email 'john@example.com'
+    => DotMailer::Contact id: 12345, email: john@example.com, email_type: PlainText
+
+### Resubscribing a contact
+
+The dotMailer API provides a specific endpoint for resubscribing contacts which will initiate the resubscribe process via email, then redirect the contact to a specified URL.
+
+This can be accessed through the `DotMailer::Contact#resubscribe` method:
+
+    contact = DotMailer.find_contact_by_email 'john@example.com'
+    => DotMailer::Contact id: 12345, email: john@example.com, status: Unsubscribed
+
+    contact.subscribed?
+    => false
+    contact.resubscribe 'http://www.example.com/resubscribed'
+    => true
+
+Then, once the contact has gone through the resubscribe process and been redirected to the specified URL:
+
+    contact = DotMailer.find_contact_by_email 'john@example.com'
+    => DotMailer::Contact id: 12345, email: john@example.com, status: Subscribed
+
+    contact.subscribed?
+    => true
+
 ### Bulk Import
 
 `DotMailer.import_contacts` will start a batch import of contacts into the global address book, and return a `DotMailer::ContactImport` object which has a `status`:

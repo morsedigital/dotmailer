@@ -27,6 +27,19 @@ describe DotMailer::Client do
     it 'should return the response from the endpoint' do
       subject.get(api_path).should == response
     end
+
+    context 'when the path is not found' do
+      let(:error_message) { 'not found' }
+      let(:response)      { { 'message' => error_message } }
+
+      before(:each) do
+        stub_request(:get, api_endpoint).to_return(:status => 404, :body => response.to_json)
+      end
+
+      it 'should raise a NotFound error with the error message' do
+        expect { subject.get(api_path).should }.to raise_error(DotMailer::NotFound, error_message)
+      end
+    end
   end
 
   describe '#post' do

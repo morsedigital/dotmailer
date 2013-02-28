@@ -1,6 +1,7 @@
 require 'dot_mailer/exceptions'
 require 'dot_mailer/data_field'
 require 'dot_mailer/contact_import'
+require 'dot_mailer/contact'
 require 'dot_mailer/client'
 
 module DotMailer
@@ -14,6 +15,14 @@ module DotMailer
 
   def self.import_contacts(contacts)
     ContactImport.import contacts
+  end
+
+  def self.find_contact_by_email(email)
+    Contact.find_by_email(email)
+  end
+
+  def self.find_contact_by_id(id)
+    Contact.find_by_id(id)
   end
 
   def self.client

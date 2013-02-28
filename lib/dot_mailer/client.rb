@@ -11,12 +11,12 @@ module DotMailer
     end
 
     def get(path)
-      endpoint = endpoint_for(path)
-      response = RestClient.get endpoint, :accept => :json
+      rescue_api_errors do
+        endpoint = endpoint_for(path)
+        response = RestClient.get endpoint, :accept => :json
 
-      JSON.parse response
-    rescue RestClient::BadRequest => e
-      raise InvalidRequest, JSON.parse(e.http_body)['message']
+        JSON.parse response
+      end
     end
 
     def post_json(path, params)
@@ -34,16 +34,41 @@ module DotMailer
     end
 
     def post(path, data, options = {})
-      endpoint = endpoint_for(path)
-      response = RestClient.post endpoint, data, options.merge(:accept => :json)
+      rescue_api_errors do
+        endpoint = endpoint_for(path)
+        response = RestClient.post endpoint, data, options.merge(:accept => :json)
 
-      JSON.parse response
-    rescue RestClient::BadRequest => e
-      raise InvalidRequest, JSON.parse(e.http_body)['message']
+        JSON.parse response
+      end
+    end
+
+    def put_json(path, params)
+      put path, params.to_json, :content_type => :json
+    end
+
+    def put(path, data, options = {})
+      rescue_api_errors do
+        endpoint = endpoint_for(path)
+        response = RestClient.put endpoint, data, options.merge(:accept => :json)
+
+        JSON.parse response
+      end
     end
 
     private
     attr_accessor :api_user, :api_pass
+
+    def rescue_api_errors
+      yield
+    rescue RestClient::BadRequest => e
+      raise InvalidRequest, extract_message_from_exception(e)
+    rescue RestClient::ResourceNotFound => e
+      raise NotFound, extract_message_from_exception(e)
+    end
+
+    def extract_message_from_exception(exception)
+      JSON.parse(exception.http_body)['message']
+    end
 
     def endpoint_for(path)
       URI::Generic.build(

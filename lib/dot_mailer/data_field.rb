@@ -57,6 +57,10 @@ module DotMailer
       attributes == other.attributes
     end
 
+    def date?
+      type == 'Date'
+    end
+
     protected
     attr_accessor :attributes
   end
