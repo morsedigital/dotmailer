@@ -101,6 +101,23 @@ module DotMailer
       true
     end
 
+    def subscribed?
+      status == 'Subscribed'
+    end
+
+    def resubscribe(return_url)
+      return false if subscribed?
+
+      client.post_json '/contacts/resubscribe',
+        'UnsubscribedContact' => {
+          'id'    => id,
+          'Email' => email
+        },
+        'ReturnUrlToUseIfChallenged' => return_url
+
+      true
+    end
+
     private
     attr_accessor :attributes
 

@@ -209,4 +209,79 @@ describe DotMailer::Contact do
       subject.save.should == true
     end
   end
+
+  describe '#subscribed?' do
+    context 'when the status is "Subscribed"' do
+      let(:status) { 'Subscribed' }
+
+      it { should be_subscribed }
+    end
+
+    context 'when ther status is not "Subscribed"' do
+      let(:status) { 'UnSubscribed' }
+
+      it { should_not be_subscribed }
+    end
+  end
+
+  describe '#resubscribe' do
+    let(:return_url) { 'some return url' }
+    let(:client)     { double 'client' }
+
+    before(:each) do
+      subject.stub :client => client
+    end
+
+    context 'when the contact is already subscribed' do
+      before(:each) do
+        subject.stub :subscribed? => true
+      end
+
+      it 'should not call put_json on the client' do
+        client.should_not_receive(:put_json)
+
+        subject.resubscribe return_url
+      end
+
+      it 'should return false' do
+        subject.resubscribe(return_url).should be_false
+      end
+    end
+
+    context 'when the contact is not subscribed' do
+      before(:each) do
+        client.stub  :post_json
+        subject.stub :subscribed? => false
+      end
+
+      it 'should call post_json on the client with the correct path' do
+        client.should_receive(:post_json).with("/contacts/resubscribe", anything)
+
+        subject.resubscribe return_url
+      end
+
+      it 'should call post_json on the client with the contacts id and email address' do
+        client.should_receive(:post_json).with anything, hash_including(
+          'UnsubscribedContact' => {
+            'id' => id,
+            'Email' => email
+          }
+        )
+
+        subject.resubscribe return_url
+      end
+
+      it 'should call post_json on the client with the return url' do
+        client.should_receive(:post_json).with anything, hash_including(
+          'ReturnUrlToUseIfChallenged' => return_url
+        )
+
+        subject.resubscribe return_url
+      end
+
+      it 'should return true' do
+        subject.resubscribe(return_url).should be_true
+      end
+    end
+  end
 end
