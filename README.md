@@ -147,3 +147,13 @@ Then, once the import has finished:
     => true
     import.status
     => "Finished"
+
+**NOTE** The specified contacts can only have the following keys (case insensitive):
+
+* `id`
+* `email`
+* `optInType`
+* `emailType`
+* Any data field name for the account (i.e. any value in `account.data_fields.map(&:name)`)
+
+If any other key is present in any of the contacts, a `DotMailer::UnknownDataField` error will be raised

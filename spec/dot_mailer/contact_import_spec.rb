@@ -43,6 +43,24 @@ describe DotMailer::ContactImport do
   its(:id) { should be_nil }
 
   describe '#start' do
+    before(:each) do
+      account.stub :data_fields => [double('data field', :name => 'CODE')]
+    end
+
+    context 'when the contacts include a non existent data field' do
+      let(:data_field_name) { 'UNKNOWN' }
+
+      let(:contacts) do
+        [
+          { 'Email' => 'john.doe@example.com', data_field_name => 'some value' }
+        ]
+      end
+
+      it 'should raise an UnknownDataField error with the data field name' do
+        expect { subject.start }.to raise_error(DotMailer::UnknownDataField, data_field_name)
+      end
+    end
+
     let(:contacts_csv) { "Email\njohn.doe@example.com\n" }
     let(:id)           { double 'id' }
     let(:response)     { { 'id' => id, 'status' => 'NotFinished' } }

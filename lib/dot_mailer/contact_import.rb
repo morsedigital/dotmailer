@@ -1,4 +1,5 @@
 require 'csv'
+require 'active_support/core_ext/object/blank'
 
 module DotMailer
   class ContactImport
@@ -18,6 +19,8 @@ module DotMailer
     end
 
     def start
+      validate_headers
+
       response = client.post_csv '/contacts/import', contacts_csv
 
       self.id = response['id']
@@ -65,6 +68,21 @@ module DotMailer
           csv << contact_headers.map { |header| contact[header] }
         end
       end
+    end
+
+    # Check that the contact_headers are all valid (case insensitive)
+    def validate_headers
+      raise UnknownDataField, unknown_headers.join(',') if unknown_headers.present?
+    end
+
+    def unknown_headers
+      @unknown_headers ||= contact_headers.reject do |header|
+        valid_headers.map(&:downcase).include?(header.downcase)
+      end
+    end
+
+    def valid_headers
+      @valid_headers ||= %w(id email optInType emailType) + account.data_fields.map(&:name)
     end
   end
 end
