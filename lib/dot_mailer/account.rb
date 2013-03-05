@@ -26,6 +26,12 @@ module DotMailer
       Contact.find_by_id self, id
     end
 
+    def suppress(email)
+      client.post_json '/contacts/unsubscribe', 'Email' => email
+
+      true
+    end
+
     def to_s
       "#{self.class.name} client: #{client}"
     end
