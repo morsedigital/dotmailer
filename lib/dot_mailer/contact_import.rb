@@ -40,6 +40,12 @@ module DotMailer
       status == 'Finished'
     end
 
+    def errors
+      raise ImportNotFinished unless finished?
+
+      client.get_csv "/contacts/import/#{id}/report-faults"
+    end
+
     def to_s
       "#{self.class.name} contacts: #{contacts.to_s}"
     end

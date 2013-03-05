@@ -143,7 +143,8 @@ Then, once the contact has gone through the resubscribe process and been redirec
     import = account.import_contacts [
       { 'Email' => 'joe@example.com' },
       { 'Email' => 'sue@example.com' },
-      { 'Email' => 'bob@example.com' }
+      { 'Email' => 'bob@example.com' },
+      { 'Email' => 'invalid@email'   }
     ]
     => DotMailer::ContactImport contacts: [{"Email"=>"joe@example.com" }, {"Email"=>"sue@example.com" }, {"Email"=>"bob@example.com"}]
 
@@ -152,12 +153,19 @@ Then, once the contact has gone through the resubscribe process and been redirec
     import.status
     => "NotFinished"
 
-Then, once the import has finished:
+Then, once the import has finished, you can query the status and get any errors (as a CSV::Table object):
 
     import.finished?
     => true
     import.status
     => "Finished"
+
+    errors = import.errors
+    => #<CSV::Table>
+    errors.count
+    => 1
+    errors.first
+    => #<CSV::Row "Reason":"Invalid Email" "Email":"invalid@email">
 
 **NOTE** The specified contacts can only have the following keys (case insensitive):
 

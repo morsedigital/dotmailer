@@ -130,4 +130,44 @@ describe DotMailer::ContactImport do
       specify { subject.should be_finished }
     end
   end
+
+  describe '#errors' do
+    let(:id) { '12345' }
+
+    before(:each) do
+      subject.stub :id => id
+    end
+
+    context 'when the import has no yet finished' do
+      before(:each) do
+        subject.stub :finished? => false
+      end
+
+      it 'should raise an ImportNotFinished error' do
+        expect { subject.errors }.to raise_error(DotMailer::ImportNotFinished)
+      end
+    end
+
+    context 'when the import has finished' do
+      before(:each) do
+        subject.stub :finished? => true
+      end
+
+      let(:errors) { double 'errors' }
+
+      before(:each) do
+        client.stub :get_csv => errors
+      end
+
+      it 'should call get_csv on the client with the import id in the path' do
+        client.should_receive(:get_csv).with("/contacts/import/#{id}/report-faults")
+
+        subject.errors
+      end
+
+      it 'should return the status from the client' do
+        subject.errors.should == errors
+      end
+    end
+  end
 end

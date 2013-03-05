@@ -1,4 +1,7 @@
 module DotMailer
+  class ImportNotFinished < Exception
+  end
+
   class InvalidRequest < Exception
   end
 
