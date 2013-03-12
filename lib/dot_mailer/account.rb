@@ -26,6 +26,10 @@ module DotMailer
       Contact.find_by_id self, id
     end
 
+    def find_contacts_modified_since(time)
+      Contact.modified_since(self, time)
+    end
+
     def suppress(email)
       client.post_json '/contacts/unsubscribe', 'Email' => email
 

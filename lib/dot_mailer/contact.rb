@@ -21,6 +21,14 @@ module DotMailer
       find_by_email account, id
     end
 
+    def self.modified_since(account, time)
+      response = account.client.get("/contacts/modified-since/#{time.utc.xmlschema}")
+
+      response.map do |attributes|
+        new(account, attributes)
+      end
+    end
+
     def initialize(account, attributes)
       self.account    = account
       self.attributes = attributes

@@ -62,6 +62,34 @@ describe DotMailer::Contact do
         subject.find_by_id(account, id).should == contact
       end
     end
+
+    describe '.modified_since' do
+      let(:time)        { Time.parse('1st March 2013 15:30:45 +00:00') }
+      let(:attributes)  { double 'attributes' }
+      let(:response)    { 3.times.map { attributes } }
+      let(:contact)     { double 'contact' }
+
+      before(:each) do
+        client.stub :get => response
+        subject.stub :new => contact
+      end
+
+      it 'should call get on the client with a path containing the time in UTC XML schema format' do
+        client.should_receive(:get).with('/contacts/modified-since/2013-03-01T15:30:45Z')
+
+        subject.modified_since(account, time)
+      end
+
+      it 'should initialize some contacts' do
+        subject.should_receive(:new).exactly(3).times.with(account, attributes)
+
+        subject.modified_since(account, time)
+      end
+
+      it 'should return the contacts' do
+        subject.modified_since(account, time).should == 3.times.map { contact }
+      end
+    end
   end
 
   let(:id)          { double 'id' }

@@ -81,6 +81,20 @@ Suppose you have one contact with email john@example.com and id 12345, then:
     account.find_contact_by_id 54321
     => nil
 
+### Finding contacts modified since a particular time
+
+Contacts modified since a particular time can be retrieved by passing a Time object to `DotMailer::Account#find_contacts_modified_since`:
+
+    account = DotMailer::Account.new('your-api-username', 'your-api-password')
+
+    time = Time.parse('1st March 2013 15:30')
+
+    account.find_contacts_modified_since(time)
+    => [
+         DotMailer::Contact id: 123, email: bob@example.com,
+         DotMailer::Contact id: 345, email: sue@example.com
+       ]
+
 ### Updating a contact
 
 Contacts can be updated by assigning new values and calling `DotMailer::Contact#save`:
