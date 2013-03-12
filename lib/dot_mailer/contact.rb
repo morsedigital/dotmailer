@@ -146,6 +146,9 @@ module DotMailer
     #   { 'FIELD1' => 'some value', 'FIELD2' => 'some other value' }
     #
     def data_fields
+      # Some API calls (e.g. modified-since) don't return data fields
+      return [] unless attributes['dataFields'].present?
+
       @data_fields ||=
         begin
           account.data_fields.each_with_object({}) do |data_field, hash|
