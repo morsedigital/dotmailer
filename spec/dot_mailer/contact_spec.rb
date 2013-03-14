@@ -228,10 +228,6 @@ describe DotMailer::Contact do
 
       subject.save
     end
-
-    it 'should return true' do
-      subject.save.should == true
-    end
   end
 
   describe '#subscribed?' do
@@ -301,10 +297,6 @@ describe DotMailer::Contact do
         )
 
         subject.resubscribe return_url
-      end
-
-      it 'should return true' do
-        subject.resubscribe(return_url).should be_true
       end
     end
   end

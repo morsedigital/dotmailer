@@ -32,8 +32,6 @@ module DotMailer
 
     def suppress(email)
       client.post_json '/contacts/unsubscribe', 'Email' => email
-
-      true
     end
 
     def to_s

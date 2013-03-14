@@ -61,10 +61,6 @@ describe DotMailer::DataField do
 
         subject.create account, name
       end
-
-      it 'should return true' do
-        subject.create(account, name).should == true
-      end
     end
   end
 

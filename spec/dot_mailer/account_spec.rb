@@ -47,9 +47,5 @@ describe DotMailer::Account do
 
       subject.suppress email
     end
-
-    it 'should return true' do
-      subject.suppress(email).should be_true
-    end
   end
 end

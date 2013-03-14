@@ -17,8 +17,6 @@ module DotMailer
         'visibility'   => options[:visibility],
         'defaultValue' => options[:default]
       )
-
-      true
     end
 
     def initialize(attributes)

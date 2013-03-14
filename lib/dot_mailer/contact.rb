@@ -102,8 +102,6 @@ module DotMailer
 
     def save
       client.put_json "/contacts/#{id}", attributes.merge('dataFields' => data_fields_for_api)
-
-      true
     end
 
     def subscribed?
@@ -119,8 +117,6 @@ module DotMailer
           'Email' => email
         },
         'ReturnUrlToUseIfChallenged' => return_url
-
-      true
     end
 
     private

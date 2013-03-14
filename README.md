@@ -46,12 +46,11 @@ Data Fields
 
 ### Create
 
-`DotMailer::Account#create_data_field` will attempt to create a new data field. On success it returns true, on failure it raises an exception:
+`DotMailer::Account#create_data_field` will attempt to create a new data field. On failure it raises an exception:
 
     account = DotMailer::Account.new('your-api-username', 'your-api-password')
 
     account.create_data_field 'FIELD3', :type => 'String'
-    => true
 
     account.create_data_field 'FIELD3', :type => 'String'
     => DotMailer::InvalidRequest: Field already exists. ERROR_NON_UNIQUE_DATAFIELD
@@ -110,7 +109,6 @@ Contacts can be updated by assigning new values and calling `DotMailer::Contact#
     => 'PlainText
 
     contact.save
-    => true
 
     contact = DotMailer.find_contact_by_email 'john@example.com'
     => DotMailer::Contact id: 12345, email: john@example.com, email_type: PlainText
@@ -127,7 +125,6 @@ This can be accessed through the `DotMailer::Contact#resubscribe` method:
     contact.subscribed?
     => false
     contact.resubscribe 'http://www.example.com/resubscribed'
-    => true
 
 Then, once the contact has gone through the resubscribe process and been redirected to the specified URL:
 
