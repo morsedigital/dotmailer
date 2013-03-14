@@ -42,6 +42,34 @@ describe DotMailer::Client do
     end
   end
 
+  describe '#get_csv' do
+    let(:response) { "Id,Name\n1,Foo\n2,Bar" }
+    let(:csv)      { double 'csv' }
+
+    before(:each) do
+      stub_request(:get, api_endpoint).to_return(:body => response)
+      CSV.stub(:parse => csv)
+    end
+
+    it 'should GET the endpoint with a CSV accept header' do
+      subject.get_csv api_path
+
+      WebMock.should have_requested(:get, api_endpoint).with(
+        :headers => { 'Accept' => 'text/csv' }
+      )
+    end
+
+    it 'should pass the response to CSV.parse with the correct options' do
+      CSV.should_receive(:parse).with(response, :headers => true)
+
+      subject.get_csv api_path
+    end
+
+    it 'should return the CSV object' do
+      subject.get_csv(api_path).should == csv
+    end
+  end
+
   describe '#post' do
     let(:data)     { 'some random data' }
     let(:response) { { 'foo' => 'bar' } }

@@ -19,6 +19,15 @@ module DotMailer
       end
     end
 
+    def get_csv(path)
+      rescue_api_errors do
+        endpoint = endpoint_for(path)
+        response = RestClient.get endpoint, :accept => :csv
+
+        CSV.parse response, :headers => true
+      end
+    end
+
     def post_json(path, params)
       post path, params.to_json, :content_type => :json
     end
