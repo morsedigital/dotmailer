@@ -48,4 +48,66 @@ describe DotMailer::Account do
       subject.suppress email
     end
   end
+
+  describe '#data_fields' do
+    let(:data_fields) { double 'data fields' }
+    let(:cache)       { double 'cache' }
+
+    before(:each) do
+      subject.stub :cache => cache
+    end
+
+    context 'when the cache is empty' do
+      before(:each) do
+        cache.stub(:fetch).with('data_fields').and_yield
+        DotMailer::DataField.stub :all => data_fields
+      end
+
+      it 'should call DataField.all' do
+        DotMailer::DataField.should_receive(:all).with(subject)
+
+        subject.data_fields
+      end
+
+      its(:data_fields) { should == data_fields }
+    end
+
+    context 'when the cache is not empty' do
+      before(:each) do
+        cache.stub(:fetch).with('data_fields').and_return(data_fields)
+      end
+
+      it 'should not call DataField.all' do
+        DotMailer::DataField.should_not_receive(:all)
+
+        subject.data_fields
+      end
+
+      its(:data_fields) { should == data_fields }
+    end
+  end
+
+  describe '#create_data_field' do
+    let(:name)    { double 'name' }
+    let(:options) { double 'options' }
+    let(:cache)   { double 'cache' }
+
+    before(:each) do
+      subject.stub :cache => cache
+      DotMailer::DataField.stub :create
+      cache.stub :delete
+    end
+
+    it 'should DataField.create' do
+      DotMailer::DataField.should_receive(:create).with(subject, name, options)
+
+      subject.create_data_field(name, options)
+    end
+
+    it 'should clear the data_fields from the cache' do
+      cache.should_receive(:delete).with('data_fields')
+
+      subject.create_data_field(name, options)
+    end
+  end
 end

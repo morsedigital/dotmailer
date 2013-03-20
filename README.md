@@ -44,6 +44,8 @@ Data Fields
          DotMailer::DataField name: "FIELD2", type: "Numeric", visibility: "Private", default: 0
        ]
 
+NOTE: The returned data fields are cached in memory for `DotMailer::Account::CACHE_LIFETIME` seconds to avoid unnecessarily hitting the API.
+
 ### Create
 
 `DotMailer::Account#create_data_field` will attempt to create a new data field. On failure it raises an exception:
@@ -54,6 +56,8 @@ Data Fields
 
     account.create_data_field 'FIELD3', :type => 'String'
     => DotMailer::InvalidRequest: Field already exists. ERROR_NON_UNIQUE_DATAFIELD
+
+NOTE: successfully creating a data field via this method will invalidate any cached data fields.
 
 Contacts
 --------

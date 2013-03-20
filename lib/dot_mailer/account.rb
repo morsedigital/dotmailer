@@ -1,5 +1,10 @@
+require 'active_support/core_ext/numeric/time'
+require 'active_support/cache'
+
 module DotMailer
   class Account
+    CACHE_LIFETIME = 1.minute
+
     attr_reader :client
 
     def initialize(api_user, api_pass)
@@ -7,11 +12,15 @@ module DotMailer
     end
 
     def data_fields
-      DataField.all self
+      cache.fetch 'data_fields' do
+        DataField.all self
+      end
     end
 
     def create_data_field(name, options = {})
       DataField.create self, name, options
+
+      cache.delete 'data_fields'
     end
 
     def import_contacts(contacts)
@@ -44,5 +53,10 @@ module DotMailer
 
     private
     attr_writer :client
+
+    def cache
+      # Auto expire content after CACHE_LIFETIME seconds
+      @cache ||= ActiveSupport::Cache::MemoryStore.new :expires_in => CACHE_LIFETIME
+    end
   end
 end
