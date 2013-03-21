@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'tempfile'
 require 'cgi'
 require 'json'
@@ -23,6 +24,9 @@ module DotMailer
       rescue_api_errors do
         endpoint = endpoint_for(path)
         response = RestClient.get endpoint, :accept => :csv
+
+        # Remove the UTF-8 BOM if present
+        response.sub!(/\A\xEF\xBB\xBF/, '')
 
         CSV.parse response, :headers => true
       end
