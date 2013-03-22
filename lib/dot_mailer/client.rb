@@ -25,6 +25,11 @@ module DotMailer
         endpoint = endpoint_for(path)
         response = RestClient.get endpoint, :accept => :csv
 
+        # Force the encoding to UTF-8 as that is what the
+        # API returns (otherwise it will be ASCII-8BIT, see
+        # http://bugs.ruby-lang.org/issues/2567)
+        response.force_encoding('UTF-8')
+
         # Remove the UTF-8 BOM if present
         response.sub!(/\A\xEF\xBB\xBF/, '')
 

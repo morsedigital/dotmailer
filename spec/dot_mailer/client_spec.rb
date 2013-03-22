@@ -43,7 +43,8 @@ describe DotMailer::Client do
   end
 
   describe '#get_csv' do
-    let(:response) { "Id,Name\n1,Foo\n2,Bar" }
+    # The API includes a UTF-8 BOM in the response...
+    let(:response) { "\xEF\xBB\xBFId,Name\n1,Foo\n2,Bar" }
     let(:csv)      { double 'csv' }
 
     before(:each) do
