@@ -231,14 +231,14 @@ describe DotMailer::Contact do
   end
 
   describe '#subscribed?' do
-    context 'when the status is "Subscribed"' do
-      let(:status) { 'Subscribed' }
+    context 'when the status is the SUBSCRIBED_STATUS' do
+      let(:status) { DotMailer::SUBSCRIBED_STATUS }
 
       it { should be_subscribed }
     end
 
-    context 'when ther status is not "Subscribed"' do
-      let(:status) { 'UnSubscribed' }
+    context 'when the status is not the SUBSCRIBED_STATUS' do
+      let(:status) { 'Unsubscribed' }
 
       it { should_not be_subscribed }
     end

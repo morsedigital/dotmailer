@@ -105,7 +105,7 @@ module DotMailer
     end
 
     def subscribed?
-      status == 'Subscribed'
+      status == SUBSCRIBED_STATUS
     end
 
     def resubscribe(return_url)
