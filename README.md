@@ -180,3 +180,23 @@ Then, once the import has finished, you can query the status and get any errors 
 * Any data field name for the account (i.e. any value in `account.data_fields.map(&:name)`)
 
 If any other key is present in any of the contacts, a `DotMailer::UnknownDataField` error will be raised
+
+Suppressions
+------------
+
+The dotMailer API provides an endpoint for retrieving suppressions since a particular point in time, where a "suppression" is the combination of a contact, a removal date, and a reason for the suppression.
+
+To fetch these suppressions, pass a Time object to `DotMailer::Account#find_suppressions_since`:
+
+    account = DotMailer::Account.new('your-api-username', 'your-api-password')
+
+    time = Time.parse('1st March 2013 15:30')
+
+    suppressions = account.find_suppressions_since(time)
+    => [
+         DotMailer::Suppression reason: Unsubscribed, date_removed: 2013-03-02 14:00:00 UTC,
+         DotMailer::Suppression reason: Unsubscribed, date_removed: 2013-03-04 16:00:00 UTC
+       ]
+
+    suppressions.first.contact
+    => DotMailer::Contact id: 12345, email: john@example.com
