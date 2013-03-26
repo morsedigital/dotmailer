@@ -114,7 +114,7 @@ describe DotMailer::ContactImport do
   end
 
   describe '#finished?' do
-    context 'when the import status is not "Finished"' do
+    context 'when the import status is "NotFinished"' do
       before(:each) do
         subject.stub :status => 'NotFinished'
       end
@@ -122,9 +122,9 @@ describe DotMailer::ContactImport do
       specify { subject.should_not be_finished }
     end
 
-    context 'when the import status is "Finished"' do
+    context 'when the import status is not "NotFinished"' do
       before(:each) do
-        subject.stub :status => 'Finished'
+        subject.stub :status => 'RejectedByWatchdog'
       end
 
       specify { subject.should be_finished }

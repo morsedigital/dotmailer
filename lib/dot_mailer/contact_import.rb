@@ -37,7 +37,7 @@ module DotMailer
     end
 
     def finished?
-      status == 'Finished'
+      status != 'NotFinished'
     end
 
     def errors
