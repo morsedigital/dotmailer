@@ -22,14 +22,14 @@ describe DotMailer::Suppression do
   end
 
   its(:contact)      { should == contact }
-  its(:date_removed) { should == Time.parse('1st March 2013 15:30:45 +00:00') }
+  its(:date_removed) { should == Time.parse('1st March 2013 16:30:45 +01:00') }
   its(:reason)       { should == reason }
 
   describe 'Class' do
     subject { DotMailer::Suppression }
 
     describe '.suppressed_since' do
-      let(:time)        { Time.parse('1st February 2013 15:30:45 +00:00') }
+      let(:time)        { Time.parse('1st February 2013 16:30:45 +01:00') }
       let(:suppression) { double 'suppression' }
 
       let(:attributes) do

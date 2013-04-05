@@ -64,7 +64,7 @@ describe DotMailer::Contact do
     end
 
     describe '.modified_since' do
-      let(:time)        { Time.parse('1st March 2013 15:30:45 +00:00') }
+      let(:time)        { Time.parse('1st March 2013 16:30:45 +01:00') }
       let(:attributes)  { double 'attributes' }
       let(:response)    { 3.times.map { attributes } }
       let(:contact)     { double 'contact' }
