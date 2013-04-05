@@ -48,7 +48,7 @@ describe DotMailer::Suppression do
       end
 
       it 'should call get on the client with a path containing the time in UTC XML schema format' do
-        client.should_receive(:get).with('/contacts/suppressed-since/2013-02-01T15:30:45Z')
+        client.should_receive(:get).with('/contacts/suppressed-since/2013-02-01T15:30:45')
 
         subject.suppressed_since(account, time)
       end
