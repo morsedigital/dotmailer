@@ -4,11 +4,15 @@ describe DotMailer::Account do
   let(:api_user) { double 'api user' }
   let(:api_pass) { double 'api pass' }
   let(:client)   { double 'client' }
+  let(:cache)    { double 'cache' }
 
   subject { DotMailer::Account.new(api_user, api_pass) }
 
   before(:each) do
-    subject.stub :client => client
+    subject.stub(
+      :client => client,
+      :cache  => cache
+    )
   end
 
   describe '#initialize' do
@@ -51,11 +55,6 @@ describe DotMailer::Account do
 
   describe '#data_fields' do
     let(:data_fields) { double 'data fields' }
-    let(:cache)       { double 'cache' }
-
-    before(:each) do
-      subject.stub :cache => cache
-    end
 
     context 'when the cache is empty' do
       before(:each) do
@@ -90,10 +89,8 @@ describe DotMailer::Account do
   describe '#create_data_field' do
     let(:name)    { double 'name' }
     let(:options) { double 'options' }
-    let(:cache)   { double 'cache' }
 
     before(:each) do
-      subject.stub :cache => cache
       DotMailer::DataField.stub :create
       cache.stub :delete
     end
@@ -108,6 +105,58 @@ describe DotMailer::Account do
       cache.should_receive(:delete).with('data_fields')
 
       subject.create_data_field(name, options)
+    end
+  end
+
+  describe '#from_addresses' do
+    let(:attributes)     { double 'attributes' }
+    let(:response)       { 3.times.map { attributes } }
+    let(:from_address)   { double 'from address' }
+    let(:from_addresses) { 3.times.map { from_address } }
+
+    before(:each) do
+      DotMailer::FromAddress.stub :new => from_address
+    end
+
+    context 'when the cache is empty' do
+      before(:each) do
+        cache.stub(:fetch).with('from_addresses').and_yield
+        client.stub :get => response
+      end
+
+      it 'should call get on the client with the correct path' do
+        client.should_receive(:get).with('/custom-from-addresses')
+
+        subject.from_addresses
+      end
+
+      it 'should initialize 3 FromAddresses' do
+        DotMailer::FromAddress.should_receive(:new).with(attributes).exactly(3).times
+
+        subject.from_addresses
+      end
+
+      its(:from_addresses) { should == from_addresses }
+    end
+
+    context 'when the cache is not empty' do
+      before(:each) do
+        cache.stub(:fetch).with('from_addresses').and_return(response)
+      end
+
+      it 'should not call get on the client' do
+        client.should_not_receive(:get)
+
+        subject.from_addresses
+      end
+
+      it 'should initialize 3 FromAddresses' do
+        DotMailer::FromAddress.should_receive(:new).with(attributes).exactly(3).times
+
+        subject.from_addresses
+      end
+
+      its(:from_addresses) { should == from_addresses }
     end
   end
 end

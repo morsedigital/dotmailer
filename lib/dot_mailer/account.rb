@@ -47,6 +47,14 @@ module DotMailer
       client.post_json '/contacts/unsubscribe', 'Email' => email
     end
 
+    def from_addresses
+      response = cache.fetch 'from_addresses' do
+        client.get('/custom-from-addresses')
+      end
+
+      response.map { |a| FromAddress.new(a) }
+    end
+
     def to_s
       "#{self.class.name} client: #{client}"
     end

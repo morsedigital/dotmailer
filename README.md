@@ -211,3 +211,20 @@ To fetch these suppressions, pass a Time object to `DotMailer::Account#find_supp
 
     suppressions.first.contact
     => DotMailer::Contact id: 12345, email: john@example.com
+
+Campaigns
+---------
+
+### From addresses
+
+Campaigns can only be sent with a from address which has been set up in dotMailer (see [here](https://support.dotmailer.com/entries/20653397-How-do-I-create-a-custom-from-address-or-additional-alias-)).
+
+To access this list of from addresses, call `DotMailer::Account#from_addresses`:
+
+    account = DotMailer::Account.new('your-api-username', 'your-api-password')
+
+    account.from_addresses
+    => [
+         DotMailer::FromAddress id: 123 email: info@example.com,
+         DotMailer::FromAddress id: 456 email: no-reply@example.com
+       ]
