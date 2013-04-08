@@ -1,3 +1,5 @@
+require 'active_support/core_ext/hash/slice'
+
 module DotMailer
   class FromAddress
     def initialize(attributes)
@@ -12,6 +14,14 @@ module DotMailer
       attributes['email']
     end
 
+    def to_hash
+      attributes.slice('id', 'email')
+    end
+
+    def ==(other)
+      attributes == other.attributes
+    end
+
     def to_s
       %{#{self.class.name} id: #{id}, email: #{email}}
     end
@@ -20,7 +30,7 @@ module DotMailer
       to_s
     end
 
-    private
+    protected
     attr_accessor :attributes
   end
 end

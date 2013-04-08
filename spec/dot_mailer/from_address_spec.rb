@@ -13,6 +13,13 @@ describe DotMailer::FromAddress do
 
   subject { DotMailer::FromAddress.new(attributes) }
 
-  its(:id)    { should == id }
-  its(:email) { should == email}
+  its(:id)      { should == id }
+  its(:email)   { should == email}
+  its(:to_hash) { should == attributes }
+
+  describe '#==' do
+    it 'should equal a from address with the same attributes' do
+      subject.should == DotMailer::FromAddress.new(attributes)
+    end
+  end
 end

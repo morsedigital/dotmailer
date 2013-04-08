@@ -55,6 +55,10 @@ module DotMailer
       response.map { |a| FromAddress.new(a) }
     end
 
+    def create_campaign(attributes)
+      Campaign.create(self, attributes)
+    end
+
     def to_s
       "#{self.class.name} client: #{client}"
     end

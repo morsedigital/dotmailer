@@ -228,3 +228,34 @@ To access this list of from addresses, call `DotMailer::Account#from_addresses`:
          DotMailer::FromAddress id: 123 email: info@example.com,
          DotMailer::FromAddress id: 456 email: no-reply@example.com
        ]
+
+### Creating Campaigns
+
+To create a dotMailer campaign, call `DotMailer::Account#create_campaign` with a hash containing the following required keys:
+
+* `:name`               - The name of the campaign as it will appear in the web interface
+* `:subject`            - The subject to use when sending the campaign
+* `:from_name`          - The name which will appear in the "From" header of the sent campaign
+* `:from_email`         - The email which will appear in the "From" header of the sent campaign (this must be a valid from address in the dotMailer system, see "From addresses" above)
+* `:html_content`       - The content which will be included in the HTML part of the sent campaign
+* `:plain_text_content` - The content which will be included in the Plain Text part of the sent campaign
+
+For example:
+
+    account = DotMailer::Account.new('your-api-username', 'your-api-password')
+
+    campaign = account.create_campaign(
+      :name                => 'my_campaign',
+      :subject             => 'My Campaign',
+      :from_name           => 'Me',
+      :from_email          => 'me@example.com',
+      :html_content        => '<h1>Hello!</h1><a href="http://$UNSUB$">Unsubscribe</a>',
+      :plain_text_content  => "Hello!\n======\nhttp://$UNSUB$"
+    )
+    => DotMailer::Campaign id: 123, name: my_campaign
+
+    campaign.subject
+    => "My Campaign"
+
+    campaign.from_address
+    => DotMailer::FromAddress id: 345, email: 'me@example.com'
