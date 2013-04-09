@@ -116,6 +116,33 @@ describe DotMailer::Campaign do
         subject.create(account, attributes).should == campaign
       end
     end
+
+    describe '.find_by_id' do
+      let(:id)       { 123 }
+      let(:response) { double 'response' }
+      let(:campaign) { double 'campaign' }
+
+      before(:each) do
+        subject.stub :new => campaign
+        client.stub :get => response
+      end
+
+      it 'should call get on the client with the correct parameters' do
+        client.should_receive(:get).with("/campaigns/#{id}")
+
+        subject.find_by_id(account, id)
+      end
+
+      it 'should initialize a Campaign with the response' do
+        subject.should_receive(:new).with(account, response)
+
+        subject.find_by_id(account, id)
+      end
+
+      it 'should return the new Campaign object' do
+        subject.find_by_id(account, id).should == campaign
+      end
+    end
   end
 
   its(:id)                 { should == id }

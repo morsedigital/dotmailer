@@ -24,6 +24,12 @@ module DotMailer
       new(account, response)
     end
 
+    def self.find_by_id(account, id)
+      response = account.client.get "/campaigns/#{id}"
+
+      new(account, response)
+    end
+
     def initialize(account, attributes)
       self.account    = account
       self.attributes = attributes

@@ -59,6 +59,10 @@ module DotMailer
       Campaign.create(self, attributes)
     end
 
+    def find_campaign_by_id(id)
+      Campaign.find_by_id(self, id)
+    end
+
     def to_s
       "#{self.class.name} client: #{client}"
     end
