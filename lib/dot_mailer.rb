@@ -7,5 +7,6 @@ require 'dot_mailer/account'
 require 'dot_mailer/client'
 
 module DotMailer
-  SUBSCRIBED_STATUS = 'Subscribed'
+  SUBSCRIBED_STATUS          = 'Subscribed'
+  GLOBALLY_SUPPRESSED_STATUS = 'Globally Suppressed'
 end
