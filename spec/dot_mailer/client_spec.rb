@@ -157,4 +157,18 @@ describe DotMailer::Client do
       subject.post_csv api_path, csv
     end
   end
+
+  describe '#delete' do
+    before(:each) do
+      stub_request(:delete, api_endpoint)
+    end
+
+    it 'should DELETE the endpoint with a JSON accept header' do
+      subject.delete api_path
+
+      WebMock.should have_requested(:delete, api_endpoint).with(
+        :headers => { 'Accept' => 'application/json' }
+      )
+    end
+  end
 end

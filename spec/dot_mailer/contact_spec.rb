@@ -230,6 +230,14 @@ describe DotMailer::Contact do
     end
   end
 
+  describe '#delete' do
+    it 'should call delete on the client with the id path' do
+      client.should_receive(:delete).with("/contacts/#{id}")
+
+      subject.delete
+    end
+  end
+
   describe '#subscribed?' do
     context 'when the status is the SUBSCRIBED_STATUS' do
       let(:status) { DotMailer::SUBSCRIBED_STATUS }

@@ -73,6 +73,13 @@ module DotMailer
       end
     end
 
+    def delete(path)
+      rescue_api_errors do
+        endpoint = endpoint_for(path)
+        RestClient.delete endpoint, :accept => :json
+      end
+    end
+
     def to_s
       "#{self.class.name} api_user: #{api_user}"
     end

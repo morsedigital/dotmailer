@@ -138,6 +138,17 @@ Then, once the contact has gone through the resubscribe process and been redirec
     contact.subscribed?
     => true
 
+### Deleting a contact
+
+Contacts can be deleted by calling `DotMailer::Contact#delete`:
+
+    account = DotMailer::Account.new('your-api-username', 'your-api-password')
+
+    contact = account.find_contact_by_email 'john@example.com'
+    => DotMailer::Contact id: 12345, email: john@example.com, email_type: Html
+
+    contact.delete
+
 ### Bulk Import
 
 `DotMailer::Account#import_contacts` will start a batch import of contacts into the global address book, and return a `DotMailer::ContactImport` object which has a `status`:

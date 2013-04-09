@@ -112,6 +112,10 @@ module DotMailer
       client.put_json "/contacts/#{id}", attributes.merge('dataFields' => data_fields_for_api)
     end
 
+    def delete
+      client.delete "/contacts/#{id}"
+    end
+
     def subscribed?
       status == SUBSCRIBED_STATUS
     end
