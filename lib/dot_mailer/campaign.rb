@@ -67,7 +67,18 @@ module DotMailer
       to_s
     end
 
+    def send_to_contact_ids(contact_ids)
+      client.post_json '/campaigns/send', {
+        'campaignId' => id,
+        'contactIds' => contact_ids
+      }
+    end
+
     private
     attr_accessor :attributes, :account
+
+    def client
+      account.client
+    end
   end
 end

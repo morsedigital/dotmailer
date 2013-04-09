@@ -151,4 +151,23 @@ describe DotMailer::Campaign do
   its(:from_address)       { should == from_address }
   its(:html_content)       { should == html_content }
   its(:plain_text_content) { should == plain_text_content }
+
+  describe '#send_to_contact_ids' do
+    let(:contact_ids) { double 'contact ids' }
+
+    it 'should call post_json on the client with the correct path' do
+      client.should_receive(:post_json).with('/campaigns/send', anything)
+
+      subject.send_to_contact_ids contact_ids
+    end
+
+    it 'should call post_json on the client with the contact ids' do
+      client.should_receive(:post_json).with(anything, {
+        'campaignId' => id,
+        'contactIds' => contact_ids
+      })
+
+      subject.send_to_contact_ids contact_ids
+    end
+  end
 end
