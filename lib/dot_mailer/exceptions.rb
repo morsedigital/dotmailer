@@ -1,4 +1,7 @@
 module DotMailer
+  class Exception < ::Exception
+  end
+
   class ImportNotFinished < Exception
   end
 
