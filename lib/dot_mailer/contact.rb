@@ -22,15 +22,7 @@ module DotMailer
     end
 
     def self.modified_since(account, time)
-      # NOTE: The API states the time should be in XML schema format but it doesn't
-      #       actually support that format correctly (it gets confused about time
-      #       zones), but treats times with no time zone as UTC, so we use that fact
-      #       here.
-      #
-      # TODO: replace this time formatting with `time.utc.xmlschema` when the API is fixed
-      time_string = time.utc.strftime '%Y-%m-%dT%H:%M:%S'
-
-      response = account.client.get("/contacts/modified-since/#{time_string}")
+      response = account.client.get("/contacts/modified-since/#{time.utc.xmlschema}")
 
       response.map do |attributes|
         new(account, attributes)

@@ -75,7 +75,7 @@ describe DotMailer::Contact do
       end
 
       it 'should call get on the client with a path containing the time in UTC XML schema format' do
-        client.should_receive(:get).with('/contacts/modified-since/2013-03-01T15:30:45')
+        client.should_receive(:get).with('/contacts/modified-since/2013-03-01T15:30:45Z')
 
         subject.modified_since(account, time)
       end
