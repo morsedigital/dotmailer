@@ -17,11 +17,15 @@ module DotMailer
     end
 
     def refresh!
-      client.post "/segments/refresh/#{self.id}"
+      client.post_json "/segments/refresh/#{self.id}", {}
     end
 
     private
     attr_accessor :attributes, :account
+
+    def client
+      account.client
+    end
   end
 end
 

@@ -5,6 +5,10 @@ describe DotMailer::Segment do
   let(:account) { double 'account', :client => client }
   let(:id)       { 123 }
 
+  subject do
+    DotMailer::Segment.new(account, { 'id' => id } )
+  end
+
   describe 'Class' do
     subject { DotMailer::Segment }
 
@@ -40,7 +44,19 @@ describe DotMailer::Segment do
     end
   end
 
-  describe '.refresh' do
+  describe '.refresh!' do
+    let(:response) { double 'response' }
+    let(:segment) { double 'segment' }
+
+    before(:each) do
+      subject.stub :new => segment
+    end
+
+    it 'should call post on the client with the correct parameters' do
+      client.should_receive(:post_json).with("/segments/refresh/#{id}",{})
+
+      subject.refresh!
+    end
   end
 
   describe '.refresh_progress' do
