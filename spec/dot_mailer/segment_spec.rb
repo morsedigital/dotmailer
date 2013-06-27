@@ -60,5 +60,21 @@ describe DotMailer::Segment do
   end
 
   describe '.refresh_progress' do
+    let(:status) { double 'status'}
+    let(:response) { {"id" => id, "status" => status} }
+
+    before(:each) do
+      client.stub :get => response
+    end
+
+    it 'should call get on the client with the correct parameters' do
+      client.should_receive(:get).with("/segments/refresh/#{id}")
+
+      subject.refresh_progress
+    end
+
+    it 'should return a percentage complete' do
+      subject.refresh_progress.should == status
+    end
   end
 end

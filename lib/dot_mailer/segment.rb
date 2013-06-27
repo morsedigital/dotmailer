@@ -20,6 +20,11 @@ module DotMailer
       client.post_json "/segments/refresh/#{self.id}", {}
     end
 
+    def refresh_progress
+      response = client.get "/segments/refresh/#{self.id}"
+      return response["status"]
+    end
+
     private
     attr_accessor :attributes, :account
 
