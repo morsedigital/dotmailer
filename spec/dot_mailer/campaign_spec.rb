@@ -170,4 +170,24 @@ describe DotMailer::Campaign do
       subject.send_to_contact_ids contact_ids
     end
   end
+
+  describe '#send_to_segment' do
+    let(:segment) { double 'segment', :id => 123 }
+
+    it 'should call post_json on the client with the correct path' do
+      client.should_receive(:post_json).with('/campaigns/send', anything)
+
+      subject.send_to_segment segment
+    end
+
+    it 'should call post_json on the client with the contact ids' do
+      client.should_receive(:post_json).with(anything, {
+        'campaignId' => id,
+        'segmentId' => segment.id
+      })
+
+      subject.send_to_segment segment
+    end
+  end
+
 end
