@@ -77,7 +77,7 @@ module DotMailer
     def send_to_segment(segment)
        client.post_json '/campaigns/send', {
          'campaignId' => id,
-         'segmentId' => segment.id
+         'addressBookIds' => [segment.id]
        }
      end
     private

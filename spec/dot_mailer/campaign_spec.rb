@@ -183,7 +183,7 @@ describe DotMailer::Campaign do
     it 'should call post_json on the client with the contact ids' do
       client.should_receive(:post_json).with(anything, {
         'campaignId' => id,
-        'segmentId' => segment.id
+        'addressBookIds' => [segment.id]
       })
 
       subject.send_to_segment segment
