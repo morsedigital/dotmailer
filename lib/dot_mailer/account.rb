@@ -47,6 +47,26 @@ module DotMailer
       client.post_json '/contacts/unsubscribe', 'Email' => email
     end
 
+    def from_addresses
+      response = cache.fetch 'from_addresses' do
+        client.get('/custom-from-addresses')
+      end
+
+      response.map { |a| FromAddress.new(a) }
+    end
+
+    def create_campaign(attributes)
+      Campaign.create(self, attributes)
+    end
+
+    def find_campaign_by_id(id)
+      Campaign.find_by_id(self, id)
+    end
+
+    def find_segment_by_id(id)
+      DotMailer::Segment.find_by_id(self, id)
+    end
+
     def to_s
       "#{self.class.name} client: #{client}"
     end
