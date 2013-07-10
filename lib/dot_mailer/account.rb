@@ -63,6 +63,10 @@ module DotMailer
       Campaign.find_by_id(self, id)
     end
 
+    def find_segment_by_id(id)
+      DotMailer::Segment.find_by_id(self, id)
+    end
+
     def to_s
       "#{self.class.name} client: #{client}"
     end
