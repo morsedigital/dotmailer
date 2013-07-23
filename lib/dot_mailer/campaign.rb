@@ -81,6 +81,10 @@ module DotMailer
       }
     end
 
+    def summary
+      DotMailer::CampaignSummary.new(account, id)
+    end
+
     private
     attr_accessor :attributes, :account
 

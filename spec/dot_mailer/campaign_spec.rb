@@ -190,4 +190,17 @@ describe DotMailer::Campaign do
     end
   end
 
+  describe '#summary' do
+    let(:summary) { double 'campaign_summary'}
+
+    it 'should call get on the client with the correct path' do
+      client.should_receive(:get).with("/campaigns/#{id}/summary")
+      subject.summary
+    end
+
+    it 'should return a CampaignSummary object' do
+      client.should_receive(:get).with(anything).and_return(summary)
+      subject.summary.class.should be(DotMailer::CampaignSummary)
+    end
+  end
 end

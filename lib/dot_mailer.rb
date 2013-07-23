@@ -8,6 +8,7 @@ require 'dot_mailer/campaign'
 require 'dot_mailer/account'
 require 'dot_mailer/client'
 require 'dot_mailer/segment'
+require 'dot_mailer/campaign_summary'
 
 module DotMailer
   SUBSCRIBED_STATUS          = 'Subscribed'
