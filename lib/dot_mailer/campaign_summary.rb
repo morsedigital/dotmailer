@@ -43,6 +43,13 @@ module DotMailer
     numDelivered
     numTextDelivered
     numTotalDelivered
+    ).each do |meth|
+      define_method(meth.underscore) do
+        @params[meth].to_i
+      end
+    end
+
+    %w(
     percentageDelivered
     percentageUniqueOpens
     percentageOpens
@@ -54,7 +61,7 @@ module DotMailer
     percentageClicksToOpens
     ).each do |meth|
       define_method(meth.underscore) do
-        @params[meth]
+        @params[meth].to_f
       end
     end
 
