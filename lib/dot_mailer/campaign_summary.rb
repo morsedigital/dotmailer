@@ -72,10 +72,6 @@ module DotMailer
     def initialize(account, id)
       @params = account.client.get "/campaigns/#{id.to_s}/summary"
     end
-    #
-    # def method_missing(name, *args, &block)
-    #   @params[name.classify]
-    # end
   end
 end
 
