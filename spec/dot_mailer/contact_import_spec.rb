@@ -182,4 +182,33 @@ describe DotMailer::ContactImport do
       end
     end
   end
+
+  describe '#wait_for_finish' do
+    before { subject.stub(:sleep).and_return(1) }
+
+    it "returns when finished is true" do
+      subject.should_receive(:finished?).once.and_return(true)
+
+      subject.send(:wait_for_finish)
+    end
+
+    it "returns nil when batch finished within max tries" do
+      subject.stub(:finished? => true)
+
+      subject.send(:wait_for_finish).should be_nil
+    end
+
+    it "sleeps between each call to finished" do
+      subject.stub(:finished? => true)
+      subject.should_receive(:sleep).once.with(1).and_return(true)
+
+      subject.send(:wait_for_finish)
+    end
+
+    it "raises an error when not finished within max tries" do
+      subject.should_receive(:finished?).exactly(10).times.and_return(false)
+
+      expect { subject.send(:wait_for_finish) }.to raise_error(DotMailer::ImportNotFinished)
+    end
+  end
 end
