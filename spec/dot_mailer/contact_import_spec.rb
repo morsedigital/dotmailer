@@ -15,6 +15,7 @@ describe DotMailer::ContactImport do
 
     describe '.import' do
       let(:contact_import) { double 'contact import', :start => double }
+      let(:wait_for_finish) { false }
 
       before(:each) do
         subject.stub :new => contact_import
@@ -23,17 +24,17 @@ describe DotMailer::ContactImport do
       it 'should create a new instance with the account and contacts' do
         subject.should_receive(:new).with(account, contacts)
 
-        subject.import account, contacts
+        subject.import account, contacts, wait_for_finish
       end
 
       it 'should start the new contact import' do
         contact_import.should_receive :start
 
-        subject.import account, contacts
+        subject.import account, contacts, wait_for_finish
       end
 
       it 'should return the contact import' do
-        subject.import(account, contacts).should == contact_import
+        subject.import(account, contacts, wait_for_finish).should == contact_import
       end
     end
   end
@@ -46,6 +47,7 @@ describe DotMailer::ContactImport do
     before(:each) do
       account.stub :data_fields => [double('data field', :name => 'CODE')]
     end
+    let(:wait_for_finish) { false }
 
     context 'when the contacts include a non existent data field' do
       let(:data_field_name) { 'UNKNOWN' }
@@ -57,7 +59,7 @@ describe DotMailer::ContactImport do
       end
 
       it 'should raise an UnknownDataField error with the data field name' do
-        expect { subject.start }.to raise_error(DotMailer::UnknownDataField, data_field_name)
+        expect { subject.start(wait_for_finish) }.to raise_error(DotMailer::UnknownDataField, data_field_name)
       end
     end
 
@@ -72,12 +74,22 @@ describe DotMailer::ContactImport do
     it 'should call post_csv on the client with the contacts in CSV format' do
       client.should_receive(:post_csv).with('/contacts/import', contacts_csv)
 
-      subject.start
+      subject.start(wait_for_finish)
     end
 
     it 'should set the id from the response' do
-      subject.start
+      subject.start(wait_for_finish)
       subject.id.should == id
+    end
+
+    context "with a wait_for_finish request" do
+      let(:wait_for_finish) { true }
+
+      it "should call the blocking wait_for_finish method" do
+        subject.should_receive(:wait_for_finish)
+
+        subject.start wait_for_finish
+      end
     end
   end
 

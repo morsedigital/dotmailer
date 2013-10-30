@@ -2,11 +2,15 @@ require 'csv'
 require 'active_support/core_ext/object/blank'
 
 module DotMailer
+  # This is the maximum number of times we will poll the dotMailer
+  # API to see if an import has finished.
+  MAX_TRIES = 10
+
   class ContactImport
-    def self.import(account, contacts)
+    def self.import(account, contacts, wait_for_finish)
       contact_import = new(account, contacts)
 
-      contact_import.start
+      contact_import.start(wait_for_finish)
 
       contact_import
     end
@@ -18,12 +22,14 @@ module DotMailer
       self.contacts = contacts
     end
 
-    def start
+    def start(wait_for_finish)
       validate_headers
 
       response = client.post_csv '/contacts/import', contacts_csv
 
       self.id = response['id']
+
+      wait_for_finish if wait_for_finish
     end
 
     def status
@@ -89,6 +95,9 @@ module DotMailer
 
     def valid_headers
       @valid_headers ||= %w(id email optInType emailType) + account.data_fields.map(&:name)
+    end
+
+    def wait_for_finish
     end
   end
 end
