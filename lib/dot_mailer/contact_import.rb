@@ -29,7 +29,7 @@ module DotMailer
 
       self.id = response['id']
 
-      wait_for_finish if wait_for_finish
+      wait_until_finished if wait_for_finish
     end
 
     def status
@@ -97,7 +97,7 @@ module DotMailer
       @valid_headers ||= %w(id email optInType emailType) + account.data_fields.map(&:name)
     end
 
-    def wait_for_finish
+    def wait_until_finished
       # Wait for the import to finish, backing off in incremental powers
       # of 2, a maximum of MAX_TRIES times.
       #
