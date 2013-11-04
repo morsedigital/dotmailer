@@ -7,7 +7,7 @@ module DotMailer
   MAX_TRIES = 10
 
   class ContactImport
-    def self.import(account, contacts, wait_for_finish)
+    def self.import(account, contacts, wait_for_finish = false)
       contact_import = new(account, contacts)
 
       contact_import.start(wait_for_finish)
