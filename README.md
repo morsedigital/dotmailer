@@ -155,18 +155,32 @@ Contacts can be deleted by calling `DotMailer::Contact#delete`:
 
     account = DotMailer::Account.new('your-api-username', 'your-api-password')
 
-    import = account.import_contacts [
+    contacts = [
       { 'Email' => 'joe@example.com' },
       { 'Email' => 'sue@example.com' },
       { 'Email' => 'bob@example.com' },
       { 'Email' => 'invalid@email'   }
     ]
+
+    import = account.import_contacts contacts
     => DotMailer::ContactImport contacts: [{"Email"=>"joe@example.com" }, {"Email"=>"sue@example.com" }, {"Email"=>"bob@example.com"}]
 
     import.finished?
     => false
     import.status
     => "NotFinished"
+
+
+The call can also block for you and will wait until the import is finished :
+
+    import = account.import_contacts contacts, wait_for_finish: true
+
+    # it will block here until finished is true
+    # if the import takes longer than 385 seconds then it will raise `DotMailer::ImportNotFinished`
+
+    import.finished?
+    => true
+
 
 Then, once the import has finished, you can query the status and get any errors (as a CSV::Table object):
 

@@ -23,8 +23,8 @@ module DotMailer
       cache.delete 'data_fields'
     end
 
-    def import_contacts(contacts)
-      ContactImport.import self, contacts
+    def import_contacts(contacts, options = {})
+      ContactImport.import self, contacts, options[:wait_for_finish]
     end
 
     def find_contact_by_email(email)
