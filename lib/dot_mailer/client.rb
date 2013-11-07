@@ -23,7 +23,10 @@ module DotMailer
     def get_csv(path)
       rescue_api_errors do
         endpoint = endpoint_for(path)
-        response = RestClient.get endpoint, :accept => :csv
+        # the :accept type for RestClient returns the incorrect value for :csv
+        # so until the PR is merged we have to use the string value
+        # https://github.com/rest-client/rest-client/pull/248
+        response = RestClient.get endpoint, :accept => 'text/csv'
 
         # Force the encoding to UTF-8 as that is what the
         # API returns (otherwise it will be ASCII-8BIT, see
