@@ -56,7 +56,7 @@ describe DotMailer::Client do
       subject.get_csv api_path
 
       WebMock.should have_requested(:get, api_endpoint).with(
-        :headers => { 'Accept' => 'text/comma-separated-values' }
+        :headers => { 'Accept' => 'text/csv' }
       )
     end
 
