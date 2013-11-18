@@ -273,3 +273,8 @@ For example:
 
     campaign.from_address
     => DotMailer::FromAddress id: 345, email: 'me@example.com'
+
+## License
+
+Copyright (c) 2013 Econsultancy. Distributed under the MIT License. See LICENSE.txt for further details.
+
