@@ -1,4 +1,4 @@
-dotMailer [![Build Status](https://travis-ci.org/econsultancy/dotmailer.png?branch=master)](https://travis-ci.org/econsultancy/dotmailer) [![Gem Version](https://badge.fury.io/rb/dotmailer.png)](http://badge.fury.io/rb/dotmailer)
+dotMailer [![Build Status](https://travis-ci.org/econsultancy/dotmailer.png?branch=master)](https://travis-ci.org/econsultancy/dotmailer) [![Gem Version](https://badge.fury.io/rb/dotmailer.png)](http://badge.fury.io/rb/dotmailer) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/econsultancy/dotmailer/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 =========
 
 [dotMailer](http://www.dotmailer.co.uk/) provide both a REST and SOAP API for interacting with their system. The REST API supports both XML and JSON payloads.
@@ -277,8 +277,3 @@ For example:
 ## License
 
 Copyright (c) 2013 Econsultancy. Distributed under the MIT License. See LICENSE.txt for further details.
-
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/econsultancy/dotmailer/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
