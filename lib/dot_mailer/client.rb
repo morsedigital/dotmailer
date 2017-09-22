@@ -97,9 +97,9 @@ module DotMailer
     def rescue_api_errors
       yield
     rescue RestClient::BadRequest => e
-      raise InvalidRequest, extract_message_from_exception(e)
+      # raise InvalidRequest, extract_message_from_exception(e)
     rescue RestClient::ResourceNotFound => e
-      raise NotFound, extract_message_from_exception(e)
+      # raise NotFound, extract_message_from_exception(e)
     end
 
     def extract_message_from_exception(exception)
